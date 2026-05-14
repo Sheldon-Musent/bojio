@@ -112,8 +112,8 @@ function updatePillContent(pill) {
 
   // Infer trust level from dot colour — #FFD700 is verified, everything else is friend
   const isVerified  = color.toUpperCase().includes('FFD700');
-  const badgeLabel  = isVerified ? 'Verified'   : 'Friend Rec';
-  const badgeClass  = isVerified ? 'verified'   : 'friend';
+  const badgeLabel  = isVerified ? 'Verified' : 'Friend'; // short labels — "Friend Rec" clips on narrow screens
+  const badgeClass  = isVerified ? 'verified' : 'friend';
 
   pill.innerHTML =
     '<span class="pill-dot" style="background:' + color + '"></span>' +

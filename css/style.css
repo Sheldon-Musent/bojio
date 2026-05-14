@@ -246,6 +246,13 @@ body.admin-body {
   gap: 0;
   max-width: calc(100vw - 32px);
   overflow: hidden;
+  transition: bottom 0.25s ease;
+}
+
+/* When panel is collapsed, drop the switcher to sit just above the collapsed pill
+   instead of floating at 40vh. Formula: pill min-height + pill bottom + gap. */
+body.panel-collapsed #layer-switcher {
+  bottom: calc(52px + 32px + 14px);
 }
 
 .layer-pill {
