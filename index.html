@@ -26,11 +26,11 @@
   <!-- Supabase JS — must load before pins.js -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
-  <!-- App scripts — order matters: config first, then layers, map, pins, tracking -->
+  <!-- App scripts — order matters: config and pins before map.js so window.loadPins exists when map boots -->
   <script src="js/config.js"></script>
   <script src="js/layers.js"></script>
-  <script src="js/map.js"></script>
   <script src="js/pins.js"></script>
+  <script src="js/map.js"></script>
   <script src="js/tracking.js"></script>
 
 </body>
