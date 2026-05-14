@@ -233,23 +233,26 @@ body.admin-body {
 
 /* ─── Layer switcher ─────────────────────────────────────────────────────────── */
 
-/* Fixed above the nearby panel, centred horizontally over the map */
+/* Fixed above the nearby panel, centred horizontally over the map.
+   gap: 0 — non-active pills provide their own left-margin when expanded
+   so the container can shrink cleanly to just the active pill when collapsed. */
 #layer-switcher {
   position: fixed;
   bottom: calc(40vh + 14px);
   left: 50%;
   transform: translateX(-50%);
-  z-index: 1001; /* sits above the nearby panel (z-index 1000) */
+  z-index: 1001;
   display: flex;
-  gap: 8px;
-  /* no background — each pill carries its own frosted dark bg */
+  gap: 0;
+  transition: opacity 0.25s ease;
 }
 
 .layer-pill {
   display: inline-flex;
   align-items: center;
   padding: 0 18px;
-  height: 44px; /* minimum 44px tap target */
+  height: 44px;
+  max-width: 150px; /* explicit max-width so the 0 → 150px transition has two concrete values */
   border-radius: 22px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(12, 12, 12, 0.82);
@@ -261,7 +264,16 @@ body.admin-body {
   cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  overflow: hidden; /* clips content during max-width collapse animation */
+  transition:
+    max-width    0.25s ease,
+    opacity      0.25s ease,
+    padding      0.25s ease,
+    margin-left  0.25s ease,
+    border-width 0.25s ease,
+    background   0.15s,
+    color        0.15s,
+    border-color 0.15s;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -277,6 +289,31 @@ body.admin-body {
   opacity: 0.4;
   cursor: default;
 }
+
+/* Non-active pills are collapsed (invisible, zero-width) by default.
+   margin-left is also 0 so no gap appears between the active pill and nothing. */
+#layer-switcher .layer-pill:not(.active) {
+  max-width:    0;
+  opacity:      0;
+  padding-left: 0;
+  padding-right: 0;
+  margin-left:  0;
+  border-width: 0;
+  pointer-events: none;
+}
+
+/* Expanded: all pills visible. margin-left provides the gap instead of flex gap. */
+#layer-switcher.expanded .layer-pill:not(.active) {
+  max-width:    150px;
+  opacity:      1;
+  padding-left: 18px;
+  padding-right: 18px;
+  margin-left:  8px;
+  border-width: 1px;
+  pointer-events: auto;
+}
+
+/* Disabled pills in expanded state inherit the reduced opacity from .layer-pill.disabled */
 
 /* ─── Layer tooltip ──────────────────────────────────────────────────────────── */
 
@@ -309,13 +346,24 @@ body.admin-body {
   border-radius: 16px 16px 0 0;
   z-index: 1000;
   transform: translateY(100%);
-  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 1;
+  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
   display: flex;
   flex-direction: column;
   overflow: hidden;
 }
 
 #nearby-panel.visible { transform: translateY(0); }
+
+/* ─── Map drag — collapse UI ─────────────────────────────────────────────────── */
+
+/* Fade out both the panel and layer switcher while the user is panning.
+   pointer-events: none prevents accidental taps on invisible elements. */
+body.map-dragging #nearby-panel,
+body.map-dragging #layer-switcher {
+  opacity: 0;
+  pointer-events: none;
+}
 
 /* Drag handle — visual affordance, no drag behaviour needed in v1 */
 #nearby-handle {

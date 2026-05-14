@@ -76,6 +76,74 @@ function locateUser(map) {
   );
 }
 
+// ─── Map drag — UI collapse ───────────────────────────────────────────────────
+
+let revealTimer = null;
+
+/**
+ * Hides the nearby panel and layer switcher while the map is being panned.
+ * Clears any pending reveal timer so rapid drags don't cause flickering.
+ */
+function collapseUI() {
+  clearTimeout(revealTimer);
+  document.body.classList.add('map-dragging');
+}
+
+/**
+ * Schedules the UI to reappear 1.5 s after the user stops panning.
+ * If a new drag starts before the timer fires, collapseUI() cancels it.
+ */
+function scheduleReveal() {
+  revealTimer = setTimeout(function () {
+    document.body.classList.remove('map-dragging');
+  }, 1500);
+}
+
+/**
+ * Wires Leaflet drag events to the collapse/reveal cycle.
+ * Leaflet fires dragstart/dragend for both mouse and touch — no extra
+ * touch handling needed.
+ */
+function initDragCollapse(map) {
+  map.on('dragstart', collapseUI);
+  map.on('dragend',   scheduleReveal);
+}
+
+// ─── Layer switcher — expand / collapse ───────────────────────────────────────
+
+let expandTimer = null;
+
+/**
+ * Expands the layer switcher to show all 4 pills, then collapses back after
+ * 3 s automatically. Tapping the active pill while expanded collapses it
+ * immediately.
+ */
+function initLayerSwitcher() {
+  const switcher   = document.getElementById('layer-switcher');
+  const activePill = switcher.querySelector('.layer-pill.active');
+
+  activePill.addEventListener('click', function () {
+    if (switcher.classList.contains('expanded')) {
+      collapseSwitcher(switcher);
+    } else {
+      expandSwitcher(switcher);
+    }
+  });
+}
+
+function expandSwitcher(switcher) {
+  switcher.classList.add('expanded');
+  clearTimeout(expandTimer);
+  expandTimer = setTimeout(function () {
+    collapseSwitcher(switcher);
+  }, 3000);
+}
+
+function collapseSwitcher(switcher) {
+  switcher.classList.remove('expanded');
+  clearTimeout(expandTimer);
+}
+
 // ─── Boot ─────────────────────────────────────────────────────────────────────
 
 /**
@@ -88,4 +156,6 @@ function locateUser(map) {
   const map = initMap(DEFAULT_CENTER);
   window.loadPins(map, DEFAULT_CENTER[0], DEFAULT_CENTER[1]);
   locateUser(map);
+  initDragCollapse(map);
+  initLayerSwitcher();
 })();
