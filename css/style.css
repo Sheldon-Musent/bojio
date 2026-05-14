@@ -74,3 +74,188 @@ body {
 .leaflet-control-attribution a {
   color: #aaa !important;
 }
+
+/* ─── Shared utilities ───────────────────────────────────────────────────────── */
+
+.hidden { display: none !important; }
+
+.msg-error   { color: #ff6b6b; font-size: 0.82rem; margin-top: 10px; }
+.msg-success { color: #51cf66; font-size: 0.82rem; margin-top: 10px; }
+
+/* ─── Admin — login panel ────────────────────────────────────────────────────── */
+
+/* admin-body allows vertical scroll (unlike the map page which locks overflow) */
+body.admin-body {
+  overflow: auto;
+  align-items: center;
+  justify-content: center;
+}
+
+#login-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+#login-card {
+  width: 100%;
+  max-width: 360px;
+  background: #1a1a1a;
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+  padding: 36px 32px;
+}
+
+#login-logo {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.12em;
+  margin-bottom: 4px;
+}
+
+#login-sub {
+  font-size: 0.75rem;
+  color: #555;
+  margin-bottom: 28px;
+}
+
+/* ─── Admin — shared form styles ─────────────────────────────────────────────── */
+
+#login-form input,
+#pin-form input,
+#pin-form textarea,
+#pin-form select {
+  display: block;
+  width: 100%;
+  background: #111;
+  border: 1px solid #2a2a2a;
+  border-radius: 5px;
+  color: #e0e0e0;
+  font-size: 0.9rem;
+  font-family: inherit;
+  padding: 10px 12px;
+  margin-bottom: 14px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+#login-form input:focus,
+#pin-form input:focus,
+#pin-form textarea:focus,
+#pin-form select:focus {
+  border-color: #FF6B35;
+}
+
+#pin-form textarea { resize: vertical; }
+
+#pin-form select { cursor: pointer; }
+
+#login-form label,
+#pin-form label {
+  display: block;
+  font-size: 0.78rem;
+  color: #888;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+#login-btn,
+#pin-submit-btn {
+  width: 100%;
+  padding: 11px;
+  background: #FF6B35;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  margin-top: 4px;
+}
+
+#login-btn:hover,
+#pin-submit-btn:hover { background: #e85c26; }
+
+#login-btn:disabled,
+#pin-submit-btn:disabled { background: #555; cursor: not-allowed; }
+
+/* ─── Admin — admin panel layout ─────────────────────────────────────────────── */
+
+#admin-panel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100vh;
+}
+
+#admin-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 24px;
+  background: #111;
+  border-bottom: 1px solid #1e1e1e;
+  flex-shrink: 0;
+}
+
+#admin-logo {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: 0.12em;
+}
+
+#admin-badge {
+  font-size: 0.65rem;
+  font-weight: 400;
+  color: #FF6B35;
+  letter-spacing: 0.08em;
+  vertical-align: middle;
+  margin-left: 4px;
+}
+
+#logout-btn {
+  background: transparent;
+  border: 1px solid #333;
+  border-radius: 4px;
+  color: #888;
+  font-size: 0.82rem;
+  padding: 6px 14px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+#logout-btn:hover { border-color: #888; color: #ccc; }
+
+#admin-main {
+  padding: 32px 24px;
+  max-width: 640px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.section-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ccc;
+  margin-bottom: 24px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+/* Two-column row for coordinate and dropdown pairs */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.form-group { display: flex; flex-direction: column; }
