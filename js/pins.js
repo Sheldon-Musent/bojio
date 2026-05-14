@@ -4,7 +4,8 @@
 
 // Supabase is loaded from CDN in index.html before this script runs.
 // CONFIG is loaded from js/config.js (gitignored) — see config.example.js.
-const supabase = window.supabase.createClient(
+// 'supabaseClient' avoids colliding with the 'supabase' global the CDN exposes
+const supabaseClient = window.supabase.createClient(
   CONFIG.supabaseUrl,
   CONFIG.supabaseAnonKey
 );
@@ -17,7 +18,7 @@ const supabase = window.supabase.createClient(
  * Returns an empty array on error so the map still renders without pins.
  */
 async function fetchFoodPins() {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseClient
     .from('pins')
     .select('id, name, description, lat, lng, area, trust_level')
     .eq('type', 'food')
@@ -59,3 +60,6 @@ async function loadPins(map) {
   const pins = await fetchFoodPins();
   renderPins(map, pins);
 }
+
+// Expose to window so map.js (loaded before pins.js) can call it after boot
+window.loadPins = loadPins;
