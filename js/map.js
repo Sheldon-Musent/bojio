@@ -82,4 +82,5 @@ function locateUser(map) {
 (function boot() {
   const map = initMap(DEFAULT_CENTER);
   locateUser(map);
+  loadPins(map); // defined in pins.js — loads food pins from Supabase
 })();
