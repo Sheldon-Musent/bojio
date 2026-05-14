@@ -66,8 +66,6 @@ function locateUser(map) {
     function onSuccess(position) {
       const { latitude, longitude } = position.coords;
       map.setView([latitude, longitude], DEFAULT_ZOOM);
-      // Re-sort nearby list by real distance — pins may or may not be loaded yet;
-      // updateNearbyList handles that gracefully via cachedPins check.
       window.updateNearbyList(latitude, longitude);
     },
     function onError() {
@@ -76,86 +74,88 @@ function locateUser(map) {
   );
 }
 
-// ─── Map drag — UI collapse ───────────────────────────────────────────────────
-
-let revealTimer = null;
+// ─── Nearby pill ──────────────────────────────────────────────────────────────
 
 /**
- * Hides the nearby panel and layer switcher while the map is being panned.
- * Clears any pending reveal timer so rapid drags don't cause flickering.
+ * Creates the floating pill element and appends it to <body>.
+ * Defined here rather than in index.html because its entire lifecycle —
+ * creation, content updates, show/hide — is driven by map events in this file.
  */
-function collapseUI() {
-  clearTimeout(revealTimer);
-  document.body.classList.add('map-dragging');
-}
-
-/**
- * Schedules the UI to reappear 1.5 s after the user stops panning.
- * If a new drag starts before the timer fires, collapseUI() cancels it.
- */
-function scheduleReveal() {
-  revealTimer = setTimeout(function () {
-    document.body.classList.remove('map-dragging');
-  }, 1500);
+function createNearbyPill() {
+  const pill = document.createElement('div');
+  pill.id = 'nearby-pill';
+  document.body.appendChild(pill);
+  return pill;
 }
 
 /**
- * Wires Leaflet drag events to the collapse/reveal cycle.
- * Leaflet fires dragstart/dragend for both mouse and touch — no extra
- * touch handling needed.
+ * Reads the nearest pin from the already-rendered #nearby-list DOM and writes
+ * it into the pill. Using the DOM avoids a direct dependency on pins.js internals.
+ *
+ * Trust badge is inferred from dot colour:
+ *   #FFD700 → "Verified"
+ *   anything else (#FF6B35) → "Friend Rec"
+ *
+ * Falls back to a generic label if pins haven't loaded yet.
  */
-function initDragCollapse(map) {
-  map.on('dragstart', collapseUI);
-  map.on('dragend',   scheduleReveal);
+function updatePillContent(pill) {
+  const firstItem = document.querySelector('#nearby-list .nearby-item');
+  if (!firstItem) {
+    pill.innerHTML = '<span class="pill-name">Nearby food</span>';
+    return;
+  }
+
+  const dotEl    = firstItem.querySelector('.nearby-dot');
+  const color    = dotEl ? dotEl.style.background : '#FF6B35';
+  const name     = firstItem.querySelector('.nearby-name')    ? firstItem.querySelector('.nearby-name').textContent    : '';
+  const distance = firstItem.querySelector('.nearby-distance') ? firstItem.querySelector('.nearby-distance').textContent : '';
+  const badge    = color.toUpperCase().includes('FFD700') ? 'Verified' : 'Friend Rec';
+
+  pill.innerHTML =
+    '<span class="pill-dot" style="background:' + color + '"></span>' +
+    '<span class="pill-name">'     + name     + '</span>' +
+    '<span class="pill-sep">·</span>' +
+    '<span class="pill-distance">' + distance + '</span>' +
+    '<span class="pill-sep">·</span>' +
+    '<span class="pill-badge">'    + badge    + '</span>';
 }
-
-// ─── Layer switcher — expand / collapse ───────────────────────────────────────
-
-let expandTimer = null;
 
 /**
- * Expands the layer switcher to show all 4 pills, then collapses back after
- * 3 s automatically. Tapping the active pill while expanded collapses it
- * immediately.
+ * Collapses the full nearby panel and shows the floating pill.
+ * Panel slides down via CSS (removing .visible triggers translateY(100%)).
+ * Pill fades in via body.panel-collapsed CSS class.
  */
-function initLayerSwitcher() {
-  const switcher   = document.getElementById('layer-switcher');
-  const activePill = switcher.querySelector('.layer-pill.active');
-
-  activePill.addEventListener('click', function () {
-    if (switcher.classList.contains('expanded')) {
-      collapseSwitcher(switcher);
-    } else {
-      expandSwitcher(switcher);
-    }
-  });
+function collapseToPill(pill) {
+  updatePillContent(pill);
+  document.getElementById('nearby-panel').classList.remove('visible');
+  document.body.classList.add('panel-collapsed');
 }
 
-function expandSwitcher(switcher) {
-  switcher.classList.add('expanded');
-  clearTimeout(expandTimer);
-  expandTimer = setTimeout(function () {
-    collapseSwitcher(switcher);
-  }, 3000);
-}
-
-function collapseSwitcher(switcher) {
-  switcher.classList.remove('expanded');
-  clearTimeout(expandTimer);
+/**
+ * Expands the floating pill back to the full nearby panel.
+ * Removing panel-collapsed hides the pill; adding .visible slides the panel up.
+ */
+function expandFromPill() {
+  document.getElementById('nearby-panel').classList.add('visible');
+  document.body.classList.remove('panel-collapsed');
 }
 
 // ─── Boot ─────────────────────────────────────────────────────────────────────
 
 /**
- * Entry point. Boots the map immediately on DEFAULT_CENTER so the page isn't
- * blank while geolocation is pending, then adjusts once position resolves.
- * Passes DEFAULT_CENTER to loadPins so the nearby list has a fallback sort
- * even before GPS resolves.
+ * Entry point. Boots the map, loads pins, locates the user, and wires up
+ * the drag-to-collapse / tap-to-expand behaviour.
+ *
+ * No auto-restore timers — the panel stays collapsed until the user taps the pill.
+ * Leaflet dragstart fires for both mouse and touch natively.
  */
 (function boot() {
-  const map = initMap(DEFAULT_CENTER);
+  const map  = initMap(DEFAULT_CENTER);
+  const pill = createNearbyPill();
+
   window.loadPins(map, DEFAULT_CENTER[0], DEFAULT_CENTER[1]);
   locateUser(map);
-  initDragCollapse(map);
-  initLayerSwitcher();
+
+  map.on('dragstart', function () { collapseToPill(pill); });
+  pill.addEventListener('click', expandFromPill);
 })();

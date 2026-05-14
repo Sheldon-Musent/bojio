@@ -233,9 +233,8 @@ body.admin-body {
 
 /* ─── Layer switcher ─────────────────────────────────────────────────────────── */
 
-/* Fixed above the nearby panel, centred horizontally over the map.
-   gap: 0 — non-active pills provide their own left-margin when expanded
-   so the container can shrink cleanly to just the active pill when collapsed. */
+/* Always visible, fixed above the nearby panel, centred horizontally.
+   All 4 pills shown at all times — no collapse behaviour. */
 #layer-switcher {
   position: fixed;
   bottom: calc(40vh + 14px);
@@ -243,8 +242,7 @@ body.admin-body {
   transform: translateX(-50%);
   z-index: 1001;
   display: flex;
-  gap: 0;
-  transition: opacity 0.25s ease;
+  gap: 8px;
 }
 
 .layer-pill {
@@ -252,7 +250,6 @@ body.admin-body {
   align-items: center;
   padding: 0 18px;
   height: 44px;
-  max-width: 150px; /* explicit max-width so the 0 → 150px transition has two concrete values */
   border-radius: 22px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(12, 12, 12, 0.82);
@@ -264,16 +261,7 @@ body.admin-body {
   cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
-  overflow: hidden; /* clips content during max-width collapse animation */
-  transition:
-    max-width    0.25s ease,
-    opacity      0.25s ease,
-    padding      0.25s ease,
-    margin-left  0.25s ease,
-    border-width 0.25s ease,
-    background   0.15s,
-    color        0.15s,
-    border-color 0.15s;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -289,31 +277,6 @@ body.admin-body {
   opacity: 0.4;
   cursor: default;
 }
-
-/* Non-active pills are collapsed (invisible, zero-width) by default.
-   margin-left is also 0 so no gap appears between the active pill and nothing. */
-#layer-switcher .layer-pill:not(.active) {
-  max-width:    0;
-  opacity:      0;
-  padding-left: 0;
-  padding-right: 0;
-  margin-left:  0;
-  border-width: 0;
-  pointer-events: none;
-}
-
-/* Expanded: all pills visible. margin-left provides the gap instead of flex gap. */
-#layer-switcher.expanded .layer-pill:not(.active) {
-  max-width:    150px;
-  opacity:      1;
-  padding-left: 18px;
-  padding-right: 18px;
-  margin-left:  8px;
-  border-width: 1px;
-  pointer-events: auto;
-}
-
-/* Disabled pills in expanded state inherit the reduced opacity from .layer-pill.disabled */
 
 /* ─── Layer tooltip ──────────────────────────────────────────────────────────── */
 
@@ -346,8 +309,7 @@ body.admin-body {
   border-radius: 16px 16px 0 0;
   z-index: 1000;
   transform: translateY(100%);
-  opacity: 1;
-  transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease;
+  transition: transform 0.25s ease;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -355,14 +317,66 @@ body.admin-body {
 
 #nearby-panel.visible { transform: translateY(0); }
 
-/* ─── Map drag — collapse UI ─────────────────────────────────────────────────── */
+/* ─── Nearby pill — collapsed state ─────────────────────────────────────────── */
 
-/* Fade out both the panel and layer switcher while the user is panning.
-   pointer-events: none prevents accidental taps on invisible elements. */
-body.map-dragging #nearby-panel,
-body.map-dragging #layer-switcher {
+/* Floating summary pill shown when the user pans the map.
+   Created and managed by map.js — not in the static HTML. */
+#nearby-pill {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1001;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  background: rgba(12, 12, 12, 0.92);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 30px;
+  cursor: pointer;
   opacity: 0;
   pointer-events: none;
+  transition: opacity 0.25s ease;
+  -webkit-tap-highlight-color: transparent;
+  white-space: nowrap;
+}
+
+body.panel-collapsed #nearby-pill {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.pill-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
+}
+
+.pill-name {
+  font-size: 0.84rem;
+  font-weight: 600;
+  color: #e0e0e0;
+}
+
+.pill-sep {
+  color: #3a3a3a;
+  font-size: 0.8rem;
+}
+
+.pill-distance {
+  font-size: 0.8rem;
+  color: #666;
+  font-variant-numeric: tabular-nums;
+}
+
+.pill-badge {
+  font-size: 0.72rem;
+  color: #777;
 }
 
 /* Drag handle — visual affordance, no drag behaviour needed in v1 */
