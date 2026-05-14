@@ -105,19 +105,21 @@ function updatePillContent(pill) {
     return;
   }
 
-  const dotEl    = firstItem.querySelector('.nearby-dot');
-  const color    = dotEl ? dotEl.style.background : '#FF6B35';
-  const name     = firstItem.querySelector('.nearby-name')    ? firstItem.querySelector('.nearby-name').textContent    : '';
-  const distance = firstItem.querySelector('.nearby-distance') ? firstItem.querySelector('.nearby-distance').textContent : '';
-  const badge    = color.toUpperCase().includes('FFD700') ? 'Verified' : 'Friend Rec';
+  const dotEl     = firstItem.querySelector('.nearby-dot');
+  const color     = dotEl ? dotEl.style.background : '#FF6B35';
+  const name      = firstItem.querySelector('.nearby-name')     ? firstItem.querySelector('.nearby-name').textContent     : '';
+  const distance  = firstItem.querySelector('.nearby-distance') ? firstItem.querySelector('.nearby-distance').textContent : '';
+
+  // Infer trust level from dot colour — #FFD700 is verified, everything else is friend
+  const isVerified  = color.toUpperCase().includes('FFD700');
+  const badgeLabel  = isVerified ? 'Verified'   : 'Friend Rec';
+  const badgeClass  = isVerified ? 'verified'   : 'friend';
 
   pill.innerHTML =
     '<span class="pill-dot" style="background:' + color + '"></span>' +
-    '<span class="pill-name">'     + name     + '</span>' +
-    '<span class="pill-sep">·</span>' +
-    '<span class="pill-distance">' + distance + '</span>' +
-    '<span class="pill-sep">·</span>' +
-    '<span class="pill-badge">'    + badge    + '</span>';
+    '<span class="pill-name">'                   + name        + '</span>' +
+    '<span class="pill-distance">'               + distance    + '</span>' +
+    '<span class="pill-badge ' + badgeClass + '">' + badgeLabel + '</span>';
 }
 
 /**

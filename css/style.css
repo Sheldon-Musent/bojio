@@ -233,8 +233,9 @@ body.admin-body {
 
 /* ─── Layer switcher ─────────────────────────────────────────────────────────── */
 
-/* Always visible, fixed above the nearby panel, centred horizontally.
-   All 4 pills shown at all times — no collapse behaviour. */
+/* Centred above the nearby panel. gap: 0 — non-active pills carry their own
+   margin-left so the container collapses cleanly to the active pill alone.
+   max-width prevents overflow on narrow screens. */
 #layer-switcher {
   position: fixed;
   bottom: calc(40vh + 14px);
@@ -242,7 +243,9 @@ body.admin-body {
   transform: translateX(-50%);
   z-index: 1001;
   display: flex;
-  gap: 8px;
+  gap: 0;
+  max-width: calc(100vw - 32px);
+  overflow: hidden;
 }
 
 .layer-pill {
@@ -250,6 +253,7 @@ body.admin-body {
   align-items: center;
   padding: 0 18px;
   height: 44px;
+  max-width: 150px; /* concrete value needed so 0 ↔ 150px transition interpolates */
   border-radius: 22px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(12, 12, 12, 0.82);
@@ -261,7 +265,16 @@ body.admin-body {
   cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  overflow: hidden; /* clips text during width collapse */
+  transition:
+    max-width    0.25s ease,
+    opacity      0.25s ease,
+    padding      0.25s ease,
+    margin-left  0.25s ease,
+    border-width 0.25s ease,
+    background   0.15s,
+    color        0.15s,
+    border-color 0.15s;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -276,6 +289,22 @@ body.admin-body {
 .layer-pill.disabled {
   opacity: 0.4;
   cursor: default;
+}
+
+/* Non-active pills: visible by default (panel expanded), gap via margin-left */
+#layer-switcher .layer-pill:not(.active) {
+  margin-left: 8px;
+}
+
+/* Panel collapsed: shrink non-active pills to zero — only Food remains */
+body.panel-collapsed #layer-switcher .layer-pill:not(.active) {
+  max-width:     0;
+  opacity:       0;
+  padding-left:  0;
+  padding-right: 0;
+  margin-left:   0;
+  border-width:  0;
+  pointer-events: none;
 }
 
 /* ─── Layer tooltip ──────────────────────────────────────────────────────────── */
@@ -320,7 +349,8 @@ body.admin-body {
 /* ─── Nearby pill — collapsed state ─────────────────────────────────────────── */
 
 /* Floating summary pill shown when the user pans the map.
-   Created and managed by map.js — not in the static HTML. */
+   Created and managed by map.js — not in the static HTML.
+   max-width prevents overflow on narrow screens. */
 #nearby-pill {
   position: fixed;
   bottom: 20px;
@@ -329,19 +359,22 @@ body.admin-body {
   z-index: 1001;
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
-  background: rgba(12, 12, 12, 0.92);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 30px;
+  gap: 10px;
+  min-height: 52px;
+  max-width: calc(100vw - 32px);
+  padding: 14px 24px;
+  background: rgba(10, 10, 10, 0.95);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 32px;
   cursor: pointer;
   opacity: 0;
   pointer-events: none;
   transition: opacity 0.25s ease;
   -webkit-tap-highlight-color: transparent;
   white-space: nowrap;
+  overflow: hidden;
 }
 
 body.panel-collapsed #nearby-pill {
@@ -358,25 +391,34 @@ body.panel-collapsed #nearby-pill {
 }
 
 .pill-name {
-  font-size: 0.84rem;
-  font-weight: 600;
-  color: #e0e0e0;
-}
-
-.pill-sep {
-  color: #3a3a3a;
-  font-size: 0.8rem;
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
 }
 
 .pill-distance {
-  font-size: 0.8rem;
+  font-size: 12px;
   color: #666;
   font-variant-numeric: tabular-nums;
 }
 
+/* Trust badge — styled as a small inline pill with colour-coded background */
 .pill-badge {
-  font-size: 0.72rem;
-  color: #777;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 3px 9px;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.pill-badge.friend {
+  background: rgba(255, 107, 53, 0.18);
+  color: #FF6B35;
+}
+
+.pill-badge.verified {
+  background: rgba(255, 215, 0, 0.15);
+  color: #FFD700;
 }
 
 /* Drag handle — visual affordance, no drag behaviour needed in v1 */
