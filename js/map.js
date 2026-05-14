@@ -54,18 +54,21 @@ function attachTiles(map) {
  * Asks the browser for the user's position and re-centres the map on success.
  * We boot on DEFAULT_CENTER first so the map is never blank — this call then
  * silently corrects the position once the browser responds.
+ * On success, also refreshes the nearby list sorted by real distance.
  * On denial or error we do nothing; the KL default is already acceptable.
  */
 function locateUser(map) {
   if (!navigator.geolocation) {
-    // Geolocation not available in this browser — stay on default centre
-    return;
+    return; // Geolocation not available — stay on default centre
   }
 
   navigator.geolocation.getCurrentPosition(
     function onSuccess(position) {
       const { latitude, longitude } = position.coords;
       map.setView([latitude, longitude], DEFAULT_ZOOM);
+      // Re-sort nearby list by real distance — pins may or may not be loaded yet;
+      // updateNearbyList handles that gracefully via cachedPins check.
+      window.updateNearbyList(latitude, longitude);
     },
     function onError() {
       // Permission denied or position unavailable — KL default stays
@@ -78,9 +81,11 @@ function locateUser(map) {
 /**
  * Entry point. Boots the map immediately on DEFAULT_CENTER so the page isn't
  * blank while geolocation is pending, then adjusts once position resolves.
+ * Passes DEFAULT_CENTER to loadPins so the nearby list has a fallback sort
+ * even before GPS resolves.
  */
 (function boot() {
   const map = initMap(DEFAULT_CENTER);
+  window.loadPins(map, DEFAULT_CENTER[0], DEFAULT_CENTER[1]);
   locateUser(map);
-  window.loadPins(map); // defined in pins.js — exposed via window to cross the script boundary
 })();

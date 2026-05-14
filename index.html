@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BOJIO</title>
 
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+
   <!-- Leaflet CSS — must load before Leaflet JS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
@@ -14,19 +16,37 @@
 <body>
 
   <header id="header">
+    <!-- Plain ASCII text — visual weight comes from CSS letter-spacing only -->
     <span id="logo">BOJIO</span>
     <span id="tagline">didn't invite you? find it yourself.</span>
   </header>
 
+  <!-- Layer switcher — Food active, others disabled in v1 -->
+  <div id="layer-switcher">
+    <button class="layer-pill active"   data-layer="food">Food</button>
+    <button class="layer-pill disabled" data-layer="news">News</button>
+    <button class="layer-pill disabled" data-layer="social">Social</button>
+    <button class="layer-pill disabled" data-layer="events">Events</button>
+  </div>
+
   <div id="map"></div>
+
+  <!-- Nearby panel — slides up once pins load, overlays bottom 40% of map -->
+  <div id="nearby-panel">
+    <div id="nearby-handle"></div>
+    <div id="nearby-header">Nearby Food</div>
+    <div id="nearby-list">
+      <p id="nearby-loading">Loading...</p>
+    </div>
+  </div>
 
   <!-- Leaflet JS — must load before map.js -->
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
-  <!-- Supabase JS — must load before pins.js -->
+  <!-- Supabase JS — must load before pins.js and tracking.js -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 
-  <!-- App scripts — order matters: config and pins before map.js so window.loadPins exists when map boots -->
+  <!-- App scripts — order: config → layers → pins → map → tracking -->
   <script src="js/config.js"></script>
   <script src="js/layers.js"></script>
   <script src="js/pins.js"></script>
