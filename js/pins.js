@@ -32,20 +32,45 @@ async function fetchFoodPins() {
   return data;
 }
 
+// ─── Marker styles ────────────────────────────────────────────────────────────
+
+const MARKER_STYLES = {
+  friend:   { color: '#FF6B35' }, // orange — tip from a mate
+  verified: { color: '#FFD700' }, // yellow — independently confirmed
+};
+
+// Base circle options shared across all trust levels
+const MARKER_BASE = {
+  radius:      10,
+  fillOpacity: 0.9,
+  weight:      2,
+  color:       '#ffffff', // white border
+};
+
+/**
+ * Returns the circleMarker style for a given trust_level.
+ * Falls back to the 'friend' style for any unrecognised value.
+ */
+function markerStyle(trustLevel) {
+  const style = MARKER_STYLES[trustLevel] || MARKER_STYLES.friend;
+  return Object.assign({}, MARKER_BASE, { fillColor: style.color });
+}
+
 // ─── Rendering ────────────────────────────────────────────────────────────────
 
 /**
- * Places a Leaflet marker for each pin and binds a popup with its name
- * and description. Accepts the Leaflet map instance from map.js.
+ * Drops a coloured circleMarker for each pin.
+ * Colour encodes trust_level (orange = friend, yellow = verified).
+ * Popup shows name in bold with the description below.
  */
 function renderPins(map, pins) {
   pins.forEach(function (pin) {
-    L.marker([pin.lat, pin.lng])
-      .bindPopup(
-        `<strong>${pin.name}</strong>` +
-        (pin.description ? `<br>${pin.description}` : '') +
-        (pin.area        ? `<br><small>${pin.area}</small>` : '')
-      )
+    const popup =
+      `<strong>${pin.name}</strong>` +
+      (pin.description ? `<br>${pin.description}` : '');
+
+    L.circleMarker([pin.lat, pin.lng], markerStyle(pin.trust_level))
+      .bindPopup(popup)
       .addTo(map);
   });
 }
