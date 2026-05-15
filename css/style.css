@@ -247,6 +247,7 @@ body.admin-body {
   gap: 8px;
   height: 44px;
   z-index: 1001;
+  touch-action: none;
   transition: bottom 0.25s ease;
 }
 
@@ -263,6 +264,7 @@ body.panel-collapsed             #control-bar { bottom: 152px; }
   overflow-y: hidden;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
+  touch-action: pan-x;
   min-width: 0;
 }
 
