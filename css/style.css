@@ -283,8 +283,21 @@ body.panel-collapsed             #control-bar { bottom: 152px; }
   cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  overflow: hidden;
+  max-width: 300px;
+  transition: background 0.15s, color 0.15s, border-color 0.15s,
+              max-width 0.25s ease, padding-left 0.25s ease,
+              padding-right 0.25s ease, opacity 0.25s ease;
   -webkit-tap-highlight-color: transparent;
+}
+
+/* Collapsed state — only active pill visible, inactive pills slide away */
+body.panel-collapsed .layer-pill:not(.active) {
+  max-width: 0;
+  padding-left: 0;
+  padding-right: 0;
+  opacity: 0;
+  pointer-events: none;
 }
 
 .layer-pill.active {
