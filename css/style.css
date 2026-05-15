@@ -255,6 +255,7 @@ body.panel-collapsed             #control-bar { bottom: 152px; }
 
 /* Scrollable layer pill tray — takes all remaining width, hides scrollbar */
 #layer-pills {
+  position: relative;
   flex: 1;
   display: flex;
   gap: 8px;
@@ -266,6 +267,19 @@ body.panel-collapsed             #control-bar { bottom: 152px; }
 }
 
 #layer-pills::-webkit-scrollbar { display: none; }
+
+/* Right-edge fade — signals scrollable content without a hard cutoff */
+#layer-pills::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 32px;
+  background: linear-gradient(to right, transparent, rgba(10, 10, 10, 0.85));
+  pointer-events: none;
+  z-index: 1;
+}
 
 .layer-pill {
   display: inline-flex;
@@ -281,6 +295,7 @@ body.panel-collapsed             #control-bar { bottom: 152px; }
   font-size: 0.82rem;
   font-family: inherit;
   cursor: pointer;
+  gap: 6px;
   white-space: nowrap;
   flex-shrink: 0;
   overflow: hidden;
@@ -299,6 +314,8 @@ body.panel-collapsed .layer-pill:not(.active) {
   opacity: 0;
   pointer-events: none;
 }
+
+.layer-pill svg { flex-shrink: 0; }
 
 .layer-pill.active {
   background: #FF6B35;
