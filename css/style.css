@@ -367,7 +367,7 @@ body.panel-collapsed #layer-switcher .layer-pill:not(.active) {
   display: flex;
   align-items: center;
   gap: 10px;
-  height: 48px;
+  height: 85px;
   width: calc(100vw - 32px);
   max-width: calc(100vw - 32px);
   padding: 0 24px;
@@ -375,7 +375,7 @@ body.panel-collapsed #layer-switcher .layer-pill:not(.active) {
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 24px;
+  border-radius: 32px;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
   cursor: pointer;
   opacity: 0;
