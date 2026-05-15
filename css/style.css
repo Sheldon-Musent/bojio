@@ -373,7 +373,7 @@ body.panel-collapsed #layer-switcher .layer-pill:not(.active) {
   background: rgba(8, 8, 8, 0.96);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  border: 2px solid red; /* TEMP: height verification — remove after testing */
   border-radius: 40px;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.6);
   cursor: pointer;
