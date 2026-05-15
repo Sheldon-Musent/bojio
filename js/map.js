@@ -90,6 +90,7 @@ function locateUser(map, marker, getPitch) {
         pitch:    getPitch(),
         bearing:  0,
         duration: 1500,
+        padding:  { bottom: 80 },
       });
       window.updateNearbyList(latitude, longitude);
     },
@@ -177,6 +178,7 @@ function expandFromPill() {
 // No auto-restore timers — panel stays collapsed until the user taps the pill.
 (function boot() {
   const map  = initMap();
+  map.setPadding({ bottom: 80 });
   const pill = createNearbyPill();
 
   window.bojoMap = map;
