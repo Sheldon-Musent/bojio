@@ -260,7 +260,7 @@ body.panel-collapsed             #control-bar { bottom: 152px; }
   position: relative;
   flex: 1;
   min-width: 0;
-  overflow: hidden;
+  overflow: visible;
 }
 
 /* Right-edge fade stays fixed — not inside the scrollable container */
