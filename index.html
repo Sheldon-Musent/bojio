@@ -15,12 +15,14 @@
 </head>
 <body>
 
-  <!-- Layer switcher — fixed above nearby panel, Food active, others disabled in v1 -->
-  <div id="layer-switcher">
-    <button class="layer-pill active"   data-layer="food">Food</button>
-    <button class="layer-pill disabled" data-layer="news">News</button>
-    <button class="layer-pill disabled" data-layer="social">Social</button>
-    <button class="layer-pill disabled" data-layer="events">Events</button>
+  <!-- Control bar — layer pills (scrollable) + action buttons (appended by map.js) -->
+  <div id="control-bar">
+    <div id="layer-pills">
+      <button class="layer-pill active"   data-layer="food">Food</button>
+      <button class="layer-pill disabled" data-layer="news">News</button>
+      <button class="layer-pill disabled" data-layer="social">Social</button>
+      <button class="layer-pill disabled" data-layer="events">Events</button>
+    </div>
   </div>
 
   <div id="map"></div>

@@ -232,36 +232,46 @@ body.admin-body {
 
 .form-group { display: flex; flex-direction: column; }
 
-/* ─── Layer switcher ─────────────────────────────────────────────────────────── */
+/* ─── Control bar ────────────────────────────────────────────────────────────── */
 
-/* Centred above the nearby panel. gap: 0 — non-active pills carry their own
-   margin-left so the container collapses cleanly to the active pill alone.
-   max-width prevents overflow on narrow screens. */
-#layer-switcher {
+/* Single fixed row: scrollable layer pills on the left, action buttons on the right.
+   Default bottom: 20px (before panel opens). :has() lifts it above the nearby panel
+   when visible; body.panel-collapsed positions it above the collapsed pill. */
+#control-bar {
   position: fixed;
-  bottom: calc(40vh + 14px);
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1001;
+  bottom: 20px;
+  left: 16px;
+  right: 16px;
   display: flex;
-  gap: 0;
-  max-width: calc(100vw - 32px);
-  overflow: hidden;
+  align-items: center;
+  gap: 8px;
+  height: 44px;
+  z-index: 1001;
   transition: bottom 0.25s ease;
 }
 
-/* When panel is collapsed, sit 14px above the collapsed pill.
-   Collapsed pill: bottom 20px + height 118px = top edge at 138px. 138px + 14px gap = 152px. */
-body.panel-collapsed #layer-switcher {
-  bottom: 152px !important;
+body:has(#nearby-panel.visible) #control-bar { bottom: calc(40vh + 14px); }
+body.panel-collapsed             #control-bar { bottom: 152px; }
+
+/* Scrollable layer pill tray — takes all remaining width, hides scrollbar */
+#layer-pills {
+  flex: 1;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  min-width: 0;
 }
+
+#layer-pills::-webkit-scrollbar { display: none; }
 
 .layer-pill {
   display: inline-flex;
   align-items: center;
   padding: 0 18px;
   height: 44px;
-  max-width: 150px; /* concrete value needed so 0 ↔ 150px transition interpolates */
   border-radius: 22px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: rgba(12, 12, 12, 0.82);
@@ -273,16 +283,7 @@ body.panel-collapsed #layer-switcher {
   cursor: pointer;
   white-space: nowrap;
   flex-shrink: 0;
-  overflow: hidden; /* clips text during width collapse */
-  transition:
-    max-width    0.25s ease,
-    opacity      0.25s ease,
-    padding      0.25s ease,
-    margin-left  0.25s ease,
-    border-width 0.25s ease,
-    background   0.15s,
-    color        0.15s,
-    border-color 0.15s;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -297,22 +298,6 @@ body.panel-collapsed #layer-switcher {
 .layer-pill.disabled {
   opacity: 0.4;
   cursor: default;
-}
-
-/* Non-active pills: visible by default (panel expanded), gap via margin-left */
-#layer-switcher .layer-pill:not(.active) {
-  margin-left: 8px;
-}
-
-/* Panel collapsed: shrink non-active pills to zero — only Food remains */
-body.panel-collapsed #layer-switcher .layer-pill:not(.active) {
-  max-width:     0;
-  opacity:       0;
-  padding-left:  0;
-  padding-right: 0;
-  margin-left:   0;
-  border-width:  0;
-  pointer-events: none;
 }
 
 /* ─── Layer tooltip ──────────────────────────────────────────────────────────── */
@@ -519,35 +504,34 @@ body.panel-collapsed #nearby-pill {
   font-variant-numeric: tabular-nums; /* keeps numbers from jumping width as they update */
 }
 
-/* ─── Bottom controls — 3D toggle + GPS button ───────────────────────────────── */
+/* ─── Control bar action buttons ─────────────────────────────────────────────── */
 
-/* Shared base for both bottom-left buttons. Default bottom: 20px (before panel
-   slides up). CSS :has() lifts them above the nearby panel when it is visible;
-   body.panel-collapsed drops them to sit above the collapsed pill. */
-#toggle-3d,
-#locate-btn {
-  position: fixed;
-  bottom: 20px;
-  z-index: 1001;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0 14px;
-  height: 36px;
-  border-radius: 18px;
+/* 3D toggle: pill shape (70px wide) when 3D active, circle (44px) when flat.
+   Width animates on toggle; height stays 44px always. */
+#toggle-3d {
+  height: 44px;
+  width: 70px;
+  flex-shrink: 0;
+  border-radius: 22px;
+  border: 1px solid #FF6B35;
+  background: #FF6B35;
+  color: #fff;
   font-family: 'Courier New', Courier, monospace;
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   cursor: pointer;
-  transition: bottom 0.25s ease, background 0.15s, color 0.15s, border-color 0.15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  white-space: nowrap;
+  transition: width 0.25s ease, background 0.15s, color 0.15s, border-color 0.15s;
   -webkit-tap-highlight-color: transparent;
 }
 
-#toggle-3d { left: 16px; border: 1px solid #FF6B35; background: #FF6B35; color: #fff; }
-#locate-btn { left: 80px; border: 1px solid rgba(255,255,255,0.08); background: rgba(12,12,12,0.82); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); color: #888; }
-
 #toggle-3d.flat {
+  width: 44px;
   background: rgba(12, 12, 12, 0.82);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
@@ -555,16 +539,25 @@ body.panel-collapsed #nearby-pill {
   color: #666;
 }
 
-/* Lift above the nearby panel when it is expanded */
-body:has(#nearby-panel.visible) #toggle-3d,
-body:has(#nearby-panel.visible) #locate-btn {
-  bottom: calc(40vh + 14px);
-}
-
-/* Sit above the collapsed pill (top edge: 20px + 118px = 138px; + 14px gap = 152px) */
-body.panel-collapsed #toggle-3d,
-body.panel-collapsed #locate-btn {
-  bottom: 152px;
+/* GPS button: fixed circle, never changes size */
+#locate-btn {
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(12, 12, 12, 0.82);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: #888;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.7rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
 }
 
 /* ─── User location dot ──────────────────────────────────────────────────────── */

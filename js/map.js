@@ -26,15 +26,15 @@ function initMap() {
 
 // ─── 2D / 3D toggle ───────────────────────────────────────────────────────────
 
-// Pill button bottom-left. Orange = 3D active, frosted-glass = 2D flat.
-// Returns getPitch() so locateUser can honour the current toggle state.
+// Creates the toggle button element. Does NOT append to DOM — boot() controls
+// insertion order within #control-bar.
+// Returns { btn, getPitch } so locateUser can read the current pitch intent.
 function createToggle3D(map) {
   let is3D = true;
 
   const btn = document.createElement('button');
   btn.id          = 'toggle-3d';
   btn.textContent = '3D';
-  document.body.appendChild(btn);
 
   btn.addEventListener('click', function () {
     is3D = !is3D;
@@ -43,14 +43,16 @@ function createToggle3D(map) {
     map.easeTo({ pitch: is3D ? 45 : 0, bearing: 0, duration: 500 });
   });
 
-  return function getPitch() { return is3D ? 45 : 0; };
+  return {
+    btn,
+    getPitch: function () { return is3D ? 45 : 0; },
+  };
 }
 
 // ─── User location ────────────────────────────────────────────────────────────
 
-// One-shot GPS request: flies to user position, moves the blue dot, re-sorts
-// the nearby list. Called automatically on load and on each GPS button tap.
-// Pitch is read from getPitch() so 2D/3D toggle is always respected.
+// One-shot GPS request: flies to user position with current pitch, moves the
+// blue dot, and re-sorts the nearby list.
 function locateUser(map, marker, getPitch) {
   if (!navigator.geolocation) return;
 
@@ -71,8 +73,9 @@ function locateUser(map, marker, getPitch) {
   );
 }
 
-// Creates the GPS button and the blue user-dot marker.
-// Each button tap fires a fresh one-shot location request — no continuous tracking.
+// Creates the GPS button element and the blue user-dot marker.
+// Does NOT append to DOM — boot() controls insertion order.
+// Each button tap fires a fresh one-shot location request.
 function createLocateButton(map, getPitch) {
   const dotEl = document.createElement('div');
   dotEl.id    = 'user-dot';
@@ -81,13 +84,12 @@ function createLocateButton(map, getPitch) {
   const btn = document.createElement('button');
   btn.id          = 'locate-btn';
   btn.textContent = 'GPS';
-  document.body.appendChild(btn);
 
   btn.addEventListener('click', function () {
     locateUser(map, marker, getPitch);
   });
 
-  return marker;
+  return { btn, marker };
 }
 
 // ─── Nearby pill ──────────────────────────────────────────────────────────────
@@ -144,17 +146,24 @@ function expandFromPill() {
 
 // ─── Boot ─────────────────────────────────────────────────────────────────────
 
-// Entry point. Creates map and all controls, then on style load fetches pins
-// and fires the initial one-shot geolocation request.
+// Entry point. Creates map, controls, and nearby pill, then on style load
+// fetches pins and fires the initial one-shot geolocation request.
+// GPS and 3D buttons are appended to #control-bar in left-to-right order.
 // loadPins must run inside 'load' so addSource/addLayer run on a ready style.
 // No auto-restore timers — panel stays collapsed until the user taps the pill.
 (function boot() {
-  const map      = initMap();
-  const pill     = createNearbyPill();
-  const getPitch = createToggle3D(map);
-  const marker   = createLocateButton(map, getPitch);
+  const map  = initMap();
+  const pill = createNearbyPill();
 
   window.bojoMap = map;
+
+  const { btn: toggle3dBtn, getPitch } = createToggle3D(map);
+  const { btn: locateBtn,   marker   } = createLocateButton(map, getPitch);
+
+  // Insert GPS then 3D so the row reads: [layer pills] [GPS] [3D]
+  const bar = document.getElementById('control-bar');
+  bar.appendChild(locateBtn);
+  bar.appendChild(toggle3dBtn);
 
   map.on('load', function () {
     window.loadPins(map, DEFAULT_LAT, DEFAULT_LNG);
