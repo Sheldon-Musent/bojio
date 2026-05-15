@@ -102,8 +102,17 @@ function expandFromPill() {
   });
   map.addControl(geolocate, 'top-left');
 
-  // Re-sort nearby list whenever a position fix arrives.
+  // Re-sort nearby list on each position fix.
+  // easeTo with explicit pitch: 45 prevents GeolocateControl from resetting
+  // the camera to 0° pitch, which would flatten the 3D buildings.
   geolocate.on('geolocate', function (e) {
+    map.easeTo({
+      center:   [e.coords.longitude, e.coords.latitude],
+      zoom:     DEFAULT_ZOOM,
+      pitch:    45,
+      bearing:  0,
+      duration: 1500,
+    });
     window.updateNearbyList(e.coords.latitude, e.coords.longitude);
   });
 
