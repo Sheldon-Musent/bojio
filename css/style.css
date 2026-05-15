@@ -278,6 +278,7 @@ body.panel-collapsed             #control-bar { bottom: 152px; }
 
 #layer-pills {
   flex: 1;
+  width: 100%;
   display: flex;
   gap: 8px;
   overflow-x: auto;
@@ -320,7 +321,7 @@ body.panel-collapsed .layer-pill:not(.active) {
   max-width: 0;
   padding-left: 0;
   padding-right: 0;
-  opacity: 0;
+  opacity: 0 !important;
   pointer-events: none;
 }
 
@@ -335,7 +336,7 @@ body.panel-collapsed .layer-pill:not(.active) {
 }
 
 .layer-pill.disabled {
-  opacity: 0.4;
+  opacity: 0.5;
   cursor: default;
 }
 

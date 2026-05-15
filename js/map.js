@@ -176,12 +176,16 @@ function collapseToPill(pill) {
   updatePillContent(pill);
   document.getElementById('nearby-panel').classList.remove('visible');
   document.body.classList.add('panel-collapsed');
+  const pillsEl = document.getElementById('layer-pills');
+  if (pillsEl) pillsEl.scrollLeft = 0;
 }
 
 // Expands the floating pill back to the full nearby panel.
 function expandFromPill() {
   document.getElementById('nearby-panel').classList.add('visible');
   document.body.classList.remove('panel-collapsed');
+  const pillsEl = document.getElementById('layer-pills');
+  if (pillsEl) pillsEl.scrollLeft = 0;
 }
 
 // ─── Boot ─────────────────────────────────────────────────────────────────────
