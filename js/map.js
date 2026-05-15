@@ -23,7 +23,6 @@ function initMap() {
     bearing:   0,
   });
 
-  map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-left');
   return map;
 }
 
@@ -81,35 +80,55 @@ function expandFromPill() {
   document.body.classList.remove('panel-collapsed');
 }
 
+// ─── 2D / 3D toggle ───────────────────────────────────────────────────────────
+
+// Creates a fixed pill button top-left that toggles camera pitch between
+// 45° (3D) and 0° (2D). Default state is 3D (orange, active).
+// Returns a getter so the geolocate handler can read current pitch intent.
+function createToggle3D(map) {
+  let is3D = true;
+
+  const btn = document.createElement('button');
+  btn.id          = 'toggle-3d';
+  btn.textContent = '3D';
+  document.body.appendChild(btn);
+
+  btn.addEventListener('click', function () {
+    is3D = !is3D;
+    btn.textContent = is3D ? '3D' : '2D';
+    btn.classList.toggle('flat', !is3D);
+    map.easeTo({ pitch: is3D ? 45 : 0, bearing: 0, duration: 500 });
+  });
+
+  return function getPitch() { return is3D ? 45 : 0; };
+}
+
 // ─── Boot ─────────────────────────────────────────────────────────────────────
 
 // Entry point. Boots the map, wires collapse behaviour, then on style load
 // fetches pins and triggers geolocation. loadPins must run inside 'load' so
 // addSource / addLayer are called only after the style is ready.
-// GeolocateControl replaces the manual navigator.geolocation call — it handles
-// flyTo, shows the user dot, and fires 'geolocate' for updateNearbyList.
 // No auto-restore timers — panel stays collapsed until the user taps the pill.
 (function boot() {
-  const map  = initMap();
-  const pill = createNearbyPill();
+  const map      = initMap();
+  const pill     = createNearbyPill();
+  const getPitch = createToggle3D(map);
 
   window.bojoMap = map;
 
   const geolocate = new mapboxgl.GeolocateControl({
-    positionOptions:  { enableHighAccuracy: true },
-    trackUserLocation: true,
+    positionOptions:   { enableHighAccuracy: true },
+    trackUserLocation: false,
     showUserHeading:   true,
   });
   map.addControl(geolocate, 'top-left');
 
-  // Re-sort nearby list on each position fix.
-  // easeTo with explicit pitch: 45 prevents GeolocateControl from resetting
-  // the camera to 0° pitch, which would flatten the 3D buildings.
+  // Fly to user position while honouring the current 2D/3D toggle state.
   geolocate.on('geolocate', function (e) {
     map.easeTo({
       center:   [e.coords.longitude, e.coords.latitude],
       zoom:     DEFAULT_ZOOM,
-      pitch:    45,
+      pitch:    getPitch(),
       bearing:  0,
       duration: 1500,
     });
