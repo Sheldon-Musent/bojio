@@ -544,13 +544,9 @@ body.panel-collapsed #nearby-pill {
   letter-spacing: 0.08em;
   color: #fff;
   white-space: nowrap;
-  opacity: 0;
-  transition: opacity 0.15s ease;
 }
 
 #toggle-3d.mode-2d .toggle-label { color: #666; }
-
-#toggle-3d.btn-expanded .toggle-label { opacity: 1; }
 
 /* GPS button: fixed circle, never changes size */
 #locate-btn {

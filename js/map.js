@@ -26,7 +26,22 @@ function initMap() {
 
 // ─── 2D / 3D toggle ───────────────────────────────────────────────────────────
 
-// Circle button — expands to show label on tap, shrinks back after 2 s.
+// Lucide 'box' (3D cube) and 'square' (2D plane) — inlined, no CDN.
+const ICON_BOX =
+  '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"' +
+  ' fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+  '<path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/>' +
+  '<polyline points="3.29 7 12 12 20.71 7"/>' +
+  '<line x1="12" y1="22" x2="12" y2="12"/>' +
+  '</svg>';
+
+const ICON_SQUARE =
+  '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"' +
+  ' fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+  '<rect width="18" height="18" x="3" y="3" rx="2"/>' +
+  '</svg>';
+
+// Circle button — shows icon at rest, expands to label on tap for 2 s.
 // Does NOT append to DOM — boot() controls insertion order within #control-bar.
 // Returns { btn, getPitch } so locateUser can read the current pitch intent.
 function createToggle3D(map) {
@@ -34,22 +49,19 @@ function createToggle3D(map) {
   let expandTimer = null;
 
   const btn = document.createElement('button');
-  btn.id = 'toggle-3d';
-
-  const label = document.createElement('span');
-  label.className   = 'toggle-label';
-  label.textContent = '3D';
-  btn.appendChild(label);
+  btn.id        = 'toggle-3d';
+  btn.innerHTML = ICON_BOX;
 
   btn.addEventListener('click', function () {
     is3D = !is3D;
-    label.textContent = is3D ? '3D' : '2D';
     btn.classList.toggle('mode-2d', !is3D);
 
+    btn.innerHTML = '<span class="toggle-label">' + (is3D ? '3D' : '2D') + '</span>';
     btn.classList.add('btn-expanded');
     clearTimeout(expandTimer);
     expandTimer = setTimeout(function () {
       btn.classList.remove('btn-expanded');
+      btn.innerHTML = is3D ? ICON_BOX : ICON_SQUARE;
     }, 2000);
 
     map.easeTo({ pitch: is3D ? 45 : 0, bearing: 0, duration: 500 });
