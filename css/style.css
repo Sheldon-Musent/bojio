@@ -249,10 +249,10 @@ body.admin-body {
   transition: bottom 0.25s ease;
 }
 
-/* When panel is collapsed, sit 16px above the collapsed pill.
-   Collapsed pill: bottom 20px + height 48px = top edge at 68px. 68px + 16px gap + 16px pill height = 100px. */
+/* When panel is collapsed, sit 14px above the collapsed pill.
+   Collapsed pill: bottom 20px + height 48px = top edge at 68px. 68px + 14px gap = 82px. */
 body.panel-collapsed #layer-switcher {
-  bottom: 100px !important;
+  bottom: 82px !important;
 }
 
 .layer-pill {
