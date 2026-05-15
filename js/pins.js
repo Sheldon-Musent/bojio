@@ -45,44 +45,67 @@ async function fetchFoodPins() {
 
 // ─── Marker styles ────────────────────────────────────────────────────────────
 
+// Colours used for circle layers and nearby-list dot colours.
 const MARKER_STYLES = {
   friend:   { color: '#FF6B35' }, // orange — tip from a mate
   verified: { color: '#FFD700' }, // yellow — independently confirmed
 };
 
-// Base circle options shared across all trust levels
-const MARKER_BASE = {
-  radius:      10,
-  fillOpacity: 0.9,
-  weight:      2,
-  color:       '#ffffff', // white border
-};
-
-/**
- * Returns the circleMarker style for a given trust_level.
- * Falls back to the 'friend' style for any unrecognised value.
- */
-function markerStyle(trustLevel) {
-  const style = MARKER_STYLES[trustLevel] || MARKER_STYLES.friend;
-  return Object.assign({}, MARKER_BASE, { fillColor: style.color });
-}
-
 // ─── Rendering ────────────────────────────────────────────────────────────────
 
-/**
- * Drops a coloured circleMarker for each pin.
- * Colour encodes trust_level (orange = friend, yellow = verified).
- * Popup shows name in bold with the description below.
- */
+// Adds all pins as a GeoJSON source and renders them as a circle layer.
+// Colour encodes trust_level via a Mapbox expression: yellow = verified, orange = friend.
+// Clicking a circle opens a mapboxgl.Popup with name and description.
 function renderPins(map, pins) {
-  pins.forEach(function (pin) {
-    const popup =
-      '<strong>' + pin.name + '</strong>' +
-      (pin.description ? '<br>' + pin.description : '');
+  const geojson = {
+    type: 'FeatureCollection',
+    features: pins.map(function (pin) {
+      return {
+        type: 'Feature',
+        geometry: { type: 'Point', coordinates: [pin.lng, pin.lat] },
+        properties: {
+          name:        pin.name,
+          description: pin.description || '',
+          trust_level: pin.trust_level,
+        },
+      };
+    }),
+  };
 
-    L.circleMarker([pin.lat, pin.lng], markerStyle(pin.trust_level))
-      .bindPopup(popup)
+  map.addSource('bojio-pins', { type: 'geojson', data: geojson });
+
+  map.addLayer({
+    id:     'bojio-pins-layer',
+    type:   'circle',
+    source: 'bojio-pins',
+    paint: {
+      'circle-radius':       10,
+      'circle-color': [
+        'match', ['get', 'trust_level'],
+        'verified', '#FFD700',
+        '#FF6B35', // default — friend
+      ],
+      'circle-stroke-width': 2,
+      'circle-stroke-color': '#ffffff',
+      'circle-opacity':      0.9,
+    },
+  });
+
+  map.on('click', 'bojio-pins-layer', function (e) {
+    const props  = e.features[0].properties;
+    const coords = e.features[0].geometry.coordinates.slice();
+    new mapboxgl.Popup()
+      .setLngLat(coords)
+      .setHTML('<strong>' + props.name + '</strong>' +
+        (props.description ? '<br>' + props.description : ''))
       .addTo(map);
+  });
+
+  map.on('mouseenter', 'bojio-pins-layer', function () {
+    map.getCanvas().style.cursor = 'pointer';
+  });
+  map.on('mouseleave', 'bojio-pins-layer', function () {
+    map.getCanvas().style.cursor = '';
   });
 }
 
@@ -164,7 +187,7 @@ function updateNearbyList(userLat, userLng) {
  * renders markers, then populates the nearby list.
  * Uses real GPS coords if they arrived before the fetch completed.
  *
- * @param {L.Map} map         - Leaflet map instance
+ * @param {mapboxgl.Map} map   - Mapbox GL JS map instance
  * @param {number} initialLat - Fallback latitude if GPS hasn't resolved yet
  * @param {number} initialLng - Fallback longitude if GPS hasn't resolved yet
  */
