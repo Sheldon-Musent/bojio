@@ -298,9 +298,7 @@ body.panel-collapsed             #control-bar { bottom: 152px; }
   height: 44px;
   border-radius: 22px;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(12, 12, 12, 0.82);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(30, 30, 30, 0.92);
   color: #666;
   font-size: 0.82rem;
   font-family: inherit;
@@ -331,8 +329,6 @@ body.panel-collapsed .layer-pill:not(.active) {
   background: #FF6B35;
   border-color: #FF6B35;
   color: #fff;
-  backdrop-filter: none;
-  -webkit-backdrop-filter: none;
 }
 
 .layer-pill.disabled {
@@ -600,6 +596,8 @@ body.panel-collapsed #nearby-pill {
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  appearance: none;
+  -webkit-appearance: none;
   transition: width 0.25s ease, border-radius 0.25s ease;
   -webkit-tap-highlight-color: transparent;
 }
