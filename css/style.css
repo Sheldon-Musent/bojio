@@ -526,10 +526,8 @@ body.panel-collapsed #nearby-pill {
 }
 
 #toggle-3d.mode-2d {
-  background: rgba(12, 12, 12, 0.82);
-  border-color: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: #ffffff;
+  border-color: #ffffff;
 }
 
 #toggle-3d.btn-expanded {
@@ -546,7 +544,7 @@ body.panel-collapsed #nearby-pill {
   white-space: nowrap;
 }
 
-#toggle-3d.mode-2d .toggle-label { color: #666; }
+#toggle-3d.mode-2d .toggle-label { color: #0a0a0a; }
 
 /* GPS button: fixed circle, never changes size */
 #locate-btn {
