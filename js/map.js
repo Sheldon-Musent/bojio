@@ -5,11 +5,11 @@
 // Token from js/config.js (gitignored) — see js/config.example.js to set up.
 mapboxgl.accessToken = CONFIG.mapboxToken;
 
-// Kuala Lumpur — shown immediately while geolocation resolves (or as fallback).
-// Mapbox GL JS uses [lng, lat] order, opposite of Leaflet.
-const DEFAULT_LNG  = 101.6869;
-const DEFAULT_LAT  = 3.1390;
-const DEFAULT_ZOOM = 16;
+// Sungai Long — where most BOJIO pins are. Shown immediately while geolocation
+// resolves (or as fallback). Mapbox GL JS uses [lng, lat] order.
+const DEFAULT_LNG  = 101.7924;
+const DEFAULT_LAT  = 3.0415;
+const DEFAULT_ZOOM = 17;
 
 // ─── Map initialisation ───────────────────────────────────────────────────────
 
