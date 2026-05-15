@@ -519,14 +519,15 @@ body.panel-collapsed #nearby-pill {
   font-variant-numeric: tabular-nums; /* keeps numbers from jumping width as they update */
 }
 
-/* ─── 2D / 3D toggle ────────────────────────────────────────────────────────── */
+/* ─── Bottom controls — 3D toggle + GPS button ───────────────────────────────── */
 
-/* Fixed pill button top-left. Active (3D) state is orange; flat (2D) state
-   matches the inactive layer-pill frosted-glass look. */
-#toggle-3d {
+/* Shared base for both bottom-left buttons. Default bottom: 20px (before panel
+   slides up). CSS :has() lifts them above the nearby panel when it is visible;
+   body.panel-collapsed drops them to sit above the collapsed pill. */
+#toggle-3d,
+#locate-btn {
   position: fixed;
-  top: 16px;
-  left: 16px;
+  bottom: 20px;
   z-index: 1001;
   display: inline-flex;
   align-items: center;
@@ -534,17 +535,17 @@ body.panel-collapsed #nearby-pill {
   padding: 0 14px;
   height: 36px;
   border-radius: 18px;
-  border: 1px solid #FF6B35;
-  background: #FF6B35;
-  color: #fff;
   font-family: 'Courier New', Courier, monospace;
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   cursor: pointer;
-  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  transition: bottom 0.25s ease, background 0.15s, color 0.15s, border-color 0.15s;
   -webkit-tap-highlight-color: transparent;
 }
+
+#toggle-3d { left: 16px; border: 1px solid #FF6B35; background: #FF6B35; color: #fff; }
+#locate-btn { left: 80px; border: 1px solid rgba(255,255,255,0.08); background: rgba(12,12,12,0.82); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); color: #888; }
 
 #toggle-3d.flat {
   background: rgba(12, 12, 12, 0.82);
@@ -552,6 +553,29 @@ body.panel-collapsed #nearby-pill {
   -webkit-backdrop-filter: blur(12px);
   border-color: rgba(255, 255, 255, 0.08);
   color: #666;
+}
+
+/* Lift above the nearby panel when it is expanded */
+body:has(#nearby-panel.visible) #toggle-3d,
+body:has(#nearby-panel.visible) #locate-btn {
+  bottom: calc(40vh + 14px);
+}
+
+/* Sit above the collapsed pill (top edge: 20px + 118px = 138px; + 14px gap = 152px) */
+body.panel-collapsed #toggle-3d,
+body.panel-collapsed #locate-btn {
+  bottom: 152px;
+}
+
+/* ─── User location dot ──────────────────────────────────────────────────────── */
+
+#user-dot {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #4A90D9;
+  border: 3px solid #ffffff;
+  box-shadow: 0 0 0 3px rgba(74, 144, 217, 0.35);
 }
 
 /* ─── Mobile — map pan and touch fixes ───────────────────────────────────────── */
