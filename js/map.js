@@ -19,6 +19,8 @@ function initMap() {
     style:     'mapbox://styles/mapbox/standard',
     center:    [DEFAULT_LNG, DEFAULT_LAT],
     zoom:      DEFAULT_ZOOM,
+    pitch:     45,
+    bearing:   0,
   });
 
   map.addControl(new mapboxgl.NavigationControl(), 'top-left');
