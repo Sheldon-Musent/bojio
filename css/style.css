@@ -506,38 +506,51 @@ body.panel-collapsed #nearby-pill {
 
 /* ─── Control bar action buttons ─────────────────────────────────────────────── */
 
-/* 3D toggle: pill shape (70px wide) when 3D active, circle (44px) when flat.
-   Width animates on toggle; height stays 44px always. */
+/* 3D toggle: resting circle (44px), expands to pill (70px) on tap for 2 s.
+   Orange when 3D active; dark when 2D (.mode-2d). Label hidden at rest. */
 #toggle-3d {
   height: 44px;
-  width: 70px;
+  width: 44px;
   flex-shrink: 0;
-  border-radius: 22px;
+  border-radius: 50%;
   border: 1px solid #FF6B35;
   background: #FF6B35;
-  color: #fff;
-  font-family: 'Courier New', Courier, monospace;
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  white-space: nowrap;
-  transition: width 0.25s ease, background 0.15s, color 0.15s, border-color 0.15s;
+  transition: width 0.25s ease, border-radius 0.25s ease,
+              background 0.15s, border-color 0.15s;
   -webkit-tap-highlight-color: transparent;
 }
 
-#toggle-3d.flat {
-  width: 44px;
+#toggle-3d.mode-2d {
   background: rgba(12, 12, 12, 0.82);
+  border-color: rgba(255, 255, 255, 0.08);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border-color: rgba(255, 255, 255, 0.08);
-  color: #666;
 }
+
+#toggle-3d.btn-expanded {
+  width: 70px;
+  border-radius: 22px;
+}
+
+.toggle-label {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #fff;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+#toggle-3d.mode-2d .toggle-label { color: #666; }
+
+#toggle-3d.btn-expanded .toggle-label { opacity: 1; }
 
 /* GPS button: fixed circle, never changes size */
 #locate-btn {

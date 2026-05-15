@@ -26,20 +26,32 @@ function initMap() {
 
 // ─── 2D / 3D toggle ───────────────────────────────────────────────────────────
 
-// Creates the toggle button element. Does NOT append to DOM — boot() controls
-// insertion order within #control-bar.
+// Circle button — expands to show label on tap, shrinks back after 2 s.
+// Does NOT append to DOM — boot() controls insertion order within #control-bar.
 // Returns { btn, getPitch } so locateUser can read the current pitch intent.
 function createToggle3D(map) {
-  let is3D = true;
+  let is3D        = true;
+  let expandTimer = null;
 
   const btn = document.createElement('button');
-  btn.id          = 'toggle-3d';
-  btn.textContent = '3D';
+  btn.id = 'toggle-3d';
+
+  const label = document.createElement('span');
+  label.className   = 'toggle-label';
+  label.textContent = '3D';
+  btn.appendChild(label);
 
   btn.addEventListener('click', function () {
     is3D = !is3D;
-    btn.textContent = is3D ? '3D' : '2D';
-    btn.classList.toggle('flat', !is3D);
+    label.textContent = is3D ? '3D' : '2D';
+    btn.classList.toggle('mode-2d', !is3D);
+
+    btn.classList.add('btn-expanded');
+    clearTimeout(expandTimer);
+    expandTimer = setTimeout(function () {
+      btn.classList.remove('btn-expanded');
+    }, 2000);
+
     map.easeTo({ pitch: is3D ? 45 : 0, bearing: 0, duration: 500 });
   });
 
