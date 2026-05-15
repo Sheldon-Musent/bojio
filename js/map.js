@@ -23,28 +23,8 @@ function initMap() {
     bearing:   0,
   });
 
-  map.addControl(new mapboxgl.NavigationControl(), 'top-left');
+  map.addControl(new mapboxgl.NavigationControl({ showCompass: false }), 'top-left');
   return map;
-}
-
-// ─── Geolocation ──────────────────────────────────────────────────────────────
-
-// Asks the browser for the user's position and flies to it on success.
-// Boots on DEFAULT_CENTER first so the map is never blank — this silently
-// corrects the position once the browser responds.
-// On success, also refreshes the nearby list sorted by real distance.
-// On denial or error the KL default stays.
-function locateUser(map) {
-  if (!navigator.geolocation) return;
-
-  navigator.geolocation.getCurrentPosition(
-    function onSuccess(position) {
-      const { latitude, longitude } = position.coords;
-      map.flyTo({ center: [longitude, latitude], zoom: DEFAULT_ZOOM });
-      window.updateNearbyList(latitude, longitude);
-    },
-    function onError() {}
-  );
 }
 
 // ─── Nearby pill ──────────────────────────────────────────────────────────────
@@ -104,19 +84,32 @@ function expandFromPill() {
 // ─── Boot ─────────────────────────────────────────────────────────────────────
 
 // Entry point. Boots the map, wires collapse behaviour, then on style load
-// fetches pins and starts geolocation. loadPins must run inside 'load' so that
+// fetches pins and triggers geolocation. loadPins must run inside 'load' so
 // addSource / addLayer are called only after the style is ready.
+// GeolocateControl replaces the manual navigator.geolocation call — it handles
+// flyTo, shows the user dot, and fires 'geolocate' for updateNearbyList.
 // No auto-restore timers — panel stays collapsed until the user taps the pill.
 (function boot() {
   const map  = initMap();
   const pill = createNearbyPill();
 
-  // Expose globally so pins.js can reference the map instance if needed.
   window.bojoMap = map;
+
+  const geolocate = new mapboxgl.GeolocateControl({
+    positionOptions:  { enableHighAccuracy: true },
+    trackUserLocation: true,
+    showUserHeading:   true,
+  });
+  map.addControl(geolocate, 'top-left');
+
+  // Re-sort nearby list whenever a position fix arrives.
+  geolocate.on('geolocate', function (e) {
+    window.updateNearbyList(e.coords.latitude, e.coords.longitude);
+  });
 
   map.on('load', function () {
     window.loadPins(map, DEFAULT_LAT, DEFAULT_LNG);
-    locateUser(map);
+    geolocate.trigger();
   });
 
   map.on('dragstart', function () { collapseToPill(pill); });
