@@ -249,9 +249,11 @@ body.admin-body {
   transition: bottom 0.25s ease;
 }
 
-/* When panel is collapsed, drop the switcher to 98px — just above the collapsed pill. */
+/* When panel is collapsed, drop the switcher to 96px — just above the collapsed pill.
+   !important is a temporary diagnostic — if this moves the pill the base rule is winning
+   via some external override (e.g. Leaflet CSS or a later inline style). */
 body.panel-collapsed #layer-switcher {
-  bottom: 98px;
+  bottom: 96px !important;
 }
 
 .layer-pill {
