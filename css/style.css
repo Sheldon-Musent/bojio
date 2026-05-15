@@ -255,8 +255,28 @@ body:has(#nearby-panel.visible) #control-bar { bottom: calc(40vh + 14px); }
 body.panel-collapsed             #control-bar { bottom: 152px; }
 
 /* Scrollable layer pill tray — takes all remaining width, hides scrollbar */
-#layer-pills {
+/* Wrapper clips the scroll container and anchors the fixed fade overlay */
+#layer-pills-wrapper {
   position: relative;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* Right-edge fade stays fixed — not inside the scrollable container */
+#layer-pills-wrapper::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 32px;
+  background: linear-gradient(to right, transparent, rgba(12, 12, 12, 0.85));
+  pointer-events: none;
+  z-index: 2;
+}
+
+#layer-pills {
   flex: 1;
   display: flex;
   gap: 8px;
@@ -269,19 +289,6 @@ body.panel-collapsed             #control-bar { bottom: 152px; }
 }
 
 #layer-pills::-webkit-scrollbar { display: none; }
-
-/* Right-edge fade — signals scrollable content without a hard cutoff */
-#layer-pills::after {
-  content: '';
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 32px;
-  background: linear-gradient(to right, rgba(12, 12, 12, 0) 0%, rgba(12, 12, 12, 0.8) 100%);
-  pointer-events: none;
-  z-index: 1;
-}
 
 .layer-pill {
   display: inline-flex;
