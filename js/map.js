@@ -98,19 +98,34 @@ function locateUser(map, marker, getPitch) {
   );
 }
 
-// Creates the GPS button element and the blue user-dot marker.
+// Lucide 'navigation' icon — inlined, no CDN.
+const ICON_NAVIGATION =
+  '<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24"' +
+  ' fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+  '<polygon points="3 11 22 2 13 21 11 13 3 11"/>' +
+  '</svg>';
+
+// Circle button — shows icon at rest, expands to "Location" label on tap for 2 s.
 // Does NOT append to DOM — boot() controls insertion order.
-// Each button tap fires a fresh one-shot location request.
 function createLocateButton(map, getPitch) {
   const dotEl = document.createElement('div');
   dotEl.id    = 'user-dot';
   const marker = new mapboxgl.Marker(dotEl);
 
+  let expandTimer = null;
+
   const btn = document.createElement('button');
-  btn.id          = 'locate-btn';
-  btn.textContent = 'GPS';
+  btn.id        = 'locate-btn';
+  btn.innerHTML =
+    '<span class="locate-icon">' + ICON_NAVIGATION + '</span>' +
+    '<span class="locate-label">Location</span>';
 
   btn.addEventListener('click', function () {
+    btn.classList.add('btn-expanded');
+    clearTimeout(expandTimer);
+    expandTimer = setTimeout(function () {
+      btn.classList.remove('btn-expanded');
+    }, 2000);
     locateUser(map, marker, getPitch);
   });
 
