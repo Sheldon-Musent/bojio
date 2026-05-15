@@ -368,6 +368,7 @@ body.panel-collapsed #layer-switcher .layer-pill:not(.active) {
   align-items: center;
   gap: 10px;
   height: 48px;
+  width: calc(100vw - 32px);
   max-width: calc(100vw - 32px);
   padding: 0 24px;
   background: rgba(8, 8, 8, 0.96);
