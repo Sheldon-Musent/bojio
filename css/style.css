@@ -260,20 +260,7 @@ body.panel-collapsed             #control-bar { bottom: 152px; }
   position: relative;
   flex: 1;
   min-width: 0;
-  overflow: visible;
-}
-
-/* Right-edge fade stays fixed — not inside the scrollable container */
-#layer-pills-wrapper::after {
-  content: '';
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 48px;
-  background: linear-gradient(to right, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.7) 100%);
-  pointer-events: none;
-  z-index: 2;
+  overflow: hidden;
 }
 
 #layer-pills {
