@@ -280,6 +280,16 @@ body.panel-collapsed #layer-pills-wrapper { flex: none; }
 
 #layer-pills::-webkit-scrollbar { display: none; }
 
+#control-bar:has(#locate-btn.btn-expanded) #layer-pills {
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
+#control-bar:has(#toggle-3d.btn-expanded) #layer-pills {
+  -webkit-mask-image: none;
+  mask-image: none;
+}
+
 .layer-pill {
   display: inline-flex;
   align-items: center;
