@@ -139,6 +139,7 @@ function createLocateButton(map, getPitch) {
       console.log('[locate-btn expand] scrollLeft:', pills.scrollLeft);
       console.log('[locate-btn expand] wrapper rect:', wrapper.getBoundingClientRect());
       console.log('[locate-btn expand] pills rect:', pills.getBoundingClientRect());
+      console.log('[locate-btn expand] mask:', getComputedStyle(pills).maskImage || getComputedStyle(pills).webkitMaskImage);
     }, 50);
     clearTimeout(expandTimer);
     expandTimer = setTimeout(function () {
