@@ -248,7 +248,7 @@ body.admin-body {
   height: 44px;
   z-index: 1001;
   touch-action: none;
-  background: linear-gradient(to bottom, transparent, rgba(10, 10, 10, 0.3));
+  background: linear-gradient(to top, rgba(10, 10, 10, 0.25) 0%, transparent 100%);
   transition: bottom 0.25s ease;
 }
 
@@ -271,7 +271,7 @@ body.panel-collapsed             #control-bar { bottom: 152px; }
   top: 0;
   bottom: 0;
   width: 48px;
-  background: linear-gradient(to right, rgba(10, 10, 10, 0) 0%, rgba(10, 10, 10, 0.4) 100%);
+  background: linear-gradient(to right, rgba(10, 10, 10, 0) 0%, rgba(10, 10, 10, 0.25) 100%);
   pointer-events: none;
   z-index: 2;
 }
