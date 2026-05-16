@@ -133,6 +133,13 @@ function createLocateButton(map, getPitch) {
   btn.addEventListener('click', function () {
     btn.classList.add('btn-expanded');
     document.getElementById('layer-pills').scrollLeft = 0;
+    setTimeout(function () {
+      var pills   = document.getElementById('layer-pills');
+      var wrapper = document.getElementById('layer-pills-wrapper');
+      console.log('[locate-btn expand] scrollLeft:', pills.scrollLeft);
+      console.log('[locate-btn expand] wrapper rect:', wrapper.getBoundingClientRect());
+      console.log('[locate-btn expand] pills rect:', pills.getBoundingClientRect());
+    }, 50);
     clearTimeout(expandTimer);
     expandTimer = setTimeout(function () {
       btn.classList.remove('btn-expanded');
