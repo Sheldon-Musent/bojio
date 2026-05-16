@@ -252,7 +252,9 @@ body.admin-body {
 }
 
 body:has(#nearby-panel.visible) #control-bar { bottom: calc(40vh + 14px); }
-body.panel-collapsed             #control-bar { bottom: 152px; }
+body.panel-collapsed             #control-bar { bottom: 152px; justify-content: center; }
+
+body.panel-collapsed #layer-pills-wrapper { flex: none; }
 
 /* Scrollable layer pill tray — takes all remaining width, hides scrollbar */
 #layer-pills-wrapper {
