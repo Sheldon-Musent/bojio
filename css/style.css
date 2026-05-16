@@ -248,7 +248,6 @@ body.admin-body {
   height: 44px;
   z-index: 1001;
   touch-action: none;
-  background: linear-gradient(to top, rgba(10, 10, 10, 0.25) 0%, transparent 100%);
   transition: bottom 0.25s ease;
 }
 
@@ -256,24 +255,10 @@ body:has(#nearby-panel.visible) #control-bar { bottom: calc(40vh + 14px); }
 body.panel-collapsed             #control-bar { bottom: 152px; }
 
 /* Scrollable layer pill tray — takes all remaining width, hides scrollbar */
-/* Wrapper clips the scroll container and anchors the fixed fade overlay */
 #layer-pills-wrapper {
-  position: relative;
   flex: 1;
   min-width: 0;
   overflow: hidden;
-}
-
-#layer-pills-wrapper::after {
-  content: '';
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 48px;
-  background: linear-gradient(to right, rgba(10, 10, 10, 0) 0%, rgba(10, 10, 10, 0.25) 100%);
-  pointer-events: none;
-  z-index: 2;
 }
 
 #layer-pills {
@@ -287,6 +272,8 @@ body.panel-collapsed             #control-bar { bottom: 152px; }
   -webkit-overflow-scrolling: touch;
   touch-action: pan-x;
   min-width: 0;
+  -webkit-mask-image: linear-gradient(to right, black 70%, transparent 100%);
+  mask-image: linear-gradient(to right, black 70%, transparent 100%);
 }
 
 #layer-pills::-webkit-scrollbar { display: none; }
