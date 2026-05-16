@@ -589,7 +589,7 @@ body.panel-collapsed #nearby-pill {
   height: 44px;
   flex-shrink: 0;
   border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: none;
   background: rgba(12, 12, 12, 0.85);
   cursor: pointer;
   display: inline-flex;
@@ -634,6 +634,11 @@ body.panel-collapsed #nearby-pill {
 #locate-btn.btn-expanded .locate-label { opacity: 1; }
 
 /* ─── User location dot ──────────────────────────────────────────────────────── */
+
+/* Hide Mapbox marker wrapper until GPS resolves — prevents a ghost element
+   appearing at [0,0] before we have real coordinates to place it. */
+.mapboxgl-marker         { display: none; }
+.mapboxgl-marker.located { display: block; }
 
 #user-dot {
   width: 16px;

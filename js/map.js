@@ -75,15 +75,28 @@ function createToggle3D(map) {
 
 // ─── User location ────────────────────────────────────────────────────────────
 
+// Null until first GPS fix — keeps Mapbox's .mapboxgl-marker wrapper out of
+// the DOM entirely until we have real coordinates to place it at.
+let userMarker = null;
+
 // One-shot GPS request: flies to user position with current pitch, moves the
 // blue dot, and re-sorts the nearby list.
-function locateUser(map, marker, getPitch) {
+function locateUser(map, getPitch) {
   if (!navigator.geolocation) return;
 
   navigator.geolocation.getCurrentPosition(
     function onSuccess(position) {
       const { latitude, longitude } = position.coords;
-      marker.setLngLat([longitude, latitude]).addTo(map);
+
+      if (!userMarker) {
+        const dotEl = document.createElement('div');
+        dotEl.id    = 'user-dot';
+        userMarker  = new mapboxgl.Marker(dotEl);
+      }
+
+      userMarker.setLngLat([longitude, latitude]).addTo(map);
+      userMarker.getElement().parentElement.classList.add('located');
+
       map.easeTo({
         center:   [longitude, latitude],
         zoom:     DEFAULT_ZOOM,
@@ -108,10 +121,6 @@ const ICON_NAVIGATION =
 // Circle button — shows icon at rest, expands to "Location" label on tap for 2 s.
 // Does NOT append to DOM — boot() controls insertion order.
 function createLocateButton(map, getPitch) {
-  const dotEl = document.createElement('div');
-  dotEl.id    = 'user-dot';
-  const marker = new mapboxgl.Marker(dotEl);
-
   let expandTimer = null;
 
   const btn = document.createElement('button');
@@ -126,10 +135,10 @@ function createLocateButton(map, getPitch) {
     expandTimer = setTimeout(function () {
       btn.classList.remove('btn-expanded');
     }, 2000);
-    locateUser(map, marker, getPitch);
+    locateUser(map, getPitch);
   });
 
-  return { btn, marker };
+  return { btn };
 }
 
 // ─── Nearby pill ──────────────────────────────────────────────────────────────
@@ -203,7 +212,7 @@ function expandFromPill() {
   window.bojoMap = map;
 
   const { btn: toggle3dBtn, getPitch } = createToggle3D(map);
-  const { btn: locateBtn,   marker   } = createLocateButton(map, getPitch);
+  const { btn: locateBtn } = createLocateButton(map, getPitch);
 
   // Insert GPS then 3D so the row reads: [layer pills] [GPS] [3D]
   const bar = document.getElementById('control-bar');
@@ -212,7 +221,7 @@ function expandFromPill() {
 
   map.on('load', function () {
     window.loadPins(map, DEFAULT_LAT, DEFAULT_LNG);
-    locateUser(map, marker, getPitch);
+    locateUser(map, getPitch);
   });
 
   map.on('dragstart', function () { collapseToPill(pill); });
