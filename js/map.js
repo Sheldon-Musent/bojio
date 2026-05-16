@@ -58,6 +58,7 @@ function createToggle3D(map) {
 
     btn.innerHTML = '<span class="toggle-label">' + (is3D ? '3D' : '2D') + '</span>';
     btn.classList.add('btn-expanded');
+    document.getElementById('layer-pills').scrollLeft = 0;
     clearTimeout(expandTimer);
     expandTimer = setTimeout(function () {
       btn.classList.remove('btn-expanded');
@@ -131,6 +132,7 @@ function createLocateButton(map, getPitch) {
 
   btn.addEventListener('click', function () {
     btn.classList.add('btn-expanded');
+    document.getElementById('layer-pills').scrollLeft = 0;
     clearTimeout(expandTimer);
     expandTimer = setTimeout(function () {
       btn.classList.remove('btn-expanded');
