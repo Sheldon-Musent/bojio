@@ -115,10 +115,17 @@ function renderPins(map, pins) {
     requestAnimationFrame(() => card.classList.add('visible'));
   });
 
-  document.addEventListener('click', function(e) {
-    const card = document.getElementById('pin-card');
-    if (card && !card.contains(e.target)) card.remove();
-  });
+  // Tap outside to dismiss — delay to avoid catching the opening click
+  setTimeout(function() {
+    document.addEventListener('click', function onOutsideClick(e) {
+      const card = document.getElementById('pin-card');
+      if (!card) { document.removeEventListener('click', onOutsideClick); return; }
+      if (!card.contains(e.target)) {
+        card.remove();
+        document.removeEventListener('click', onOutsideClick);
+      }
+    });
+  }, 0);
 
   map.on('mouseenter', 'bojio-pins-layer', function () {
     map.getCanvas().style.cursor = 'pointer';
