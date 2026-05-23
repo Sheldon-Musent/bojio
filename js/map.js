@@ -100,6 +100,9 @@ function locateUser(map, getPitch) {
       }
 
       userMarker.setLngLat([longitude, latitude]).addTo(map);
+      console.log('[locate] marker el:', userMarker.getElement());
+      console.log('[locate] marker parent:', userMarker.getElement().parentElement);
+      console.log('[locate] parent classes:', userMarker.getElement().parentElement?.classList);
       userMarker.getElement().parentElement.classList.add('located');
 
       map.easeTo({
