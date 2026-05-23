@@ -274,6 +274,8 @@ body.panel-collapsed #layer-pills-wrapper { flex: none; }
   -webkit-overflow-scrolling: touch;
   touch-action: pan-x;
   min-width: 0;
+  -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
+  mask-image: linear-gradient(to right, black 85%, transparent 100%);
 }
 
 #layer-pills::-webkit-scrollbar { display: none; }
