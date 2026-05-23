@@ -637,7 +637,7 @@ body.panel-collapsed #nearby-pill {
 /* Hide Mapbox marker wrapper until GPS resolves — prevents a ghost element
    appearing at [0,0] before we have real coordinates to place it. */
 .mapboxgl-marker         { display: none; }
-.mapboxgl-marker.located { display: block; }
+.mapboxgl-marker:has(#user-dot.located) { display: block; }
 
 #user-dot {
   width: 16px;
