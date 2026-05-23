@@ -67,6 +67,7 @@ function renderPins(map, pins) {
           name:        pin.name,
           description: pin.description || '',
           trust_level: pin.trust_level,
+          area:        pin.area || '',
         },
       };
     }),
@@ -93,12 +94,30 @@ function renderPins(map, pins) {
 
   map.on('click', 'bojio-pins-layer', function (e) {
     const props  = e.features[0].properties;
-    const coords = e.features[0].geometry.coordinates.slice();
-    new mapboxgl.Popup()
-      .setLngLat(coords)
-      .setHTML('<strong>' + props.name + '</strong>' +
-        (props.description ? '<br>' + props.description : ''))
-      .addTo(map);
+
+    const existing = document.getElementById('pin-card');
+    if (existing) existing.remove();
+
+    const trust = props.trust_level === 'friend' ? 'Friend' : 'Verified';
+    const trustColor = props.trust_level === 'friend' ? '#FF6B35' : '#F5C518';
+
+    const card = document.createElement('div');
+    card.id = 'pin-card';
+    card.innerHTML = `
+      <div id="pin-card-handle"></div>
+      <div id="pin-card-badge" style="background:${trustColor}">${trust}</div>
+      <div id="pin-card-name">${props.name}</div>
+      ${props.area ? `<div id="pin-card-area">${props.area}</div>` : ''}
+      ${props.description ? `<div id="pin-card-desc">${props.description}</div>` : ''}
+    `;
+    document.body.appendChild(card);
+
+    requestAnimationFrame(() => card.classList.add('visible'));
+  });
+
+  document.addEventListener('click', function(e) {
+    const card = document.getElementById('pin-card');
+    if (card && !card.contains(e.target)) card.remove();
   });
 
   map.on('mouseenter', 'bojio-pins-layer', function () {
