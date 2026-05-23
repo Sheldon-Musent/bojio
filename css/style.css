@@ -260,7 +260,7 @@ body.panel-collapsed #layer-pills-wrapper { flex: none; }
 #layer-pills-wrapper {
   flex: 1;
   min-width: 0;
-  overflow: hidden;
+  overflow: visible;
 }
 
 #layer-pills {
