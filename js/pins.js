@@ -94,38 +94,13 @@ function renderPins(map, pins) {
 
   map.on('click', 'bojio-pins-layer', function (e) {
     const props  = e.features[0].properties;
-
-    const existing = document.getElementById('pin-card');
-    if (existing) existing.remove();
-
-    const trust = props.trust_level === 'friend' ? 'Friend' : 'Verified';
-    const trustColor = props.trust_level === 'friend' ? '#FF6B35' : '#F5C518';
-
-    const card = document.createElement('div');
-    card.id = 'pin-card';
-    card.innerHTML = `
-      <div id="pin-card-handle"></div>
-      <div id="pin-card-badge" style="background:${trustColor}">${trust}</div>
-      <div id="pin-card-name">${props.name}</div>
-      ${props.area ? `<div id="pin-card-area">${props.area}</div>` : ''}
-      ${props.description ? `<div id="pin-card-desc">${props.description}</div>` : ''}
-    `;
-    document.body.appendChild(card);
-
-    requestAnimationFrame(() => card.classList.add('visible'));
+    const coords = e.features[0].geometry.coordinates.slice();
+    new mapboxgl.Popup()
+      .setLngLat(coords)
+      .setHTML('<strong>' + props.name + '</strong>' +
+        (props.description ? '<br>' + props.description : ''))
+      .addTo(map);
   });
-
-  // Tap outside to dismiss — delay to avoid catching the opening click
-  setTimeout(function() {
-    document.addEventListener('click', function onOutsideClick(e) {
-      const card = document.getElementById('pin-card');
-      if (!card) { document.removeEventListener('click', onOutsideClick); return; }
-      if (!card.contains(e.target)) {
-        card.remove();
-        document.removeEventListener('click', onOutsideClick);
-      }
-    });
-  }, 0);
 
   map.on('mouseenter', 'bojio-pins-layer', function () {
     map.getCanvas().style.cursor = 'pointer';
