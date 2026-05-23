@@ -228,6 +228,8 @@ function expandFromPill() {
 
   map.on('load', function () {
     window.loadPins(map, DEFAULT_LAT, DEFAULT_LNG);
+    map.setConfigProperty('basemap', 'showPointOfInterestLabels', false);
+    map.setConfigProperty('basemap', 'showTransitLabels', false);
     locateUser(map, getPitch);
   });
 
