@@ -139,14 +139,6 @@ function createLocateButton(map, getPitch) {
     document.getElementById('layer-pills').style.webkitMaskImage = 'none';
     document.getElementById('layer-pills').style.maskImage = 'none';
     document.getElementById('layer-pills').scrollLeft = 0;
-    setTimeout(function () {
-      var pills   = document.getElementById('layer-pills');
-      var wrapper = document.getElementById('layer-pills-wrapper');
-      console.log('[locate-btn expand] scrollLeft:', pills.scrollLeft);
-      console.log('[locate-btn expand] wrapper rect:', wrapper.getBoundingClientRect());
-      console.log('[locate-btn expand] pills rect:', pills.getBoundingClientRect());
-      console.log('[locate-btn expand] mask:', getComputedStyle(pills).maskImage || getComputedStyle(pills).webkitMaskImage);
-    }, 50);
     clearTimeout(expandTimer);
     expandTimer = setTimeout(function () {
       btn.classList.remove('btn-expanded');
@@ -232,9 +224,13 @@ function expandFromPill() {
   const { btn: toggle3dBtn, getPitch } = createToggle3D(map);
   const { btn: locateBtn } = createLocateButton(map, getPitch);
 
-  // Insert GPS then 3D so the row reads: [layer pills] [GPS] [3D]
+  // Insert GPS, direction, then 3D so the row reads: [layer pills] [GPS] [DIR] [3D]
+  const dirBtn = document.createElement('button');
+  dirBtn.id = 'direction-btn';
+  dirBtn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>';
   const bar = document.getElementById('control-bar');
   bar.appendChild(locateBtn);
+  bar.appendChild(dirBtn);
   bar.appendChild(toggle3dBtn);
 
   map.on('load', function () {

@@ -322,6 +322,19 @@ body.panel-collapsed .layer-pill:not(.active) {
   pointer-events: none;
 }
 
+/* Collapsed — Food pill shrinks to icon only */
+body.panel-collapsed .layer-pill.active {
+  padding-left: 13px;
+  padding-right: 13px;
+}
+body.panel-collapsed .layer-pill.active .pill-text {
+  max-width: 0;
+  opacity: 0;
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+}
+
 .layer-pill svg { flex-shrink: 0; }
 
 .layer-pill.active {
@@ -631,6 +644,21 @@ body.panel-collapsed #nearby-pill {
 }
 
 #locate-btn.btn-expanded .locate-label { opacity: 1; }
+
+#direction-btn {
+  height: 44px;
+  width: 44px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.15);
+  background: rgba(30,30,30,0.92);
+  color: #666;
+  cursor: default;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+}
 
 /* ─── User location dot ──────────────────────────────────────────────────────── */
 
