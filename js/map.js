@@ -152,34 +152,79 @@ function createNearbyPill() {
   const pill = document.createElement('div');
   pill.id = 'nearby-pill';
   document.body.appendChild(pill);
+
+  let touchStartX = 0;
+  pill.addEventListener('touchstart', function(e) {
+    touchStartX = e.touches[0].clientX;
+  }, { passive: true });
+
+  pill.addEventListener('touchend', function(e) {
+    const dx = e.changedTouches[0].clientX - touchStartX;
+    const pins = window._pillPins || [];
+    if (!pins.length) return;
+    if (Math.abs(dx) < 40) return;
+    if (dx < 0) {
+      window._pillIndex = Math.min((window._pillIndex || 0) + 1, pins.length - 1);
+    } else {
+      window._pillIndex = Math.max((window._pillIndex || 0) - 1, 0);
+    }
+    renderPillSlide(pill, window._pillIndex);
+  });
+
   return pill;
 }
 
-// Reads the nearest pin from the already-rendered #nearby-list DOM and writes
-// it into the pill. Trust badge inferred from dot colour: #FFD700 → Verified.
 function updatePillContent(pill) {
-  const firstItem = document.querySelector('#nearby-list .nearby-item');
-  if (!firstItem) {
+  const items = document.querySelectorAll('#nearby-list .nearby-item');
+  if (!items.length) {
     pill.innerHTML = '<span class="pill-name">Nearby food</span>';
     return;
   }
+  window._pillPins = Array.from(items).map(function(item) {
+    const dotEl = item.querySelector('.nearby-dot');
+    const color = dotEl ? dotEl.style.background : '#FF6B35';
+    const name = item.querySelector('.nearby-name') ? item.querySelector('.nearby-name').textContent : '';
+    const distance = item.querySelector('.nearby-distance') ? item.querySelector('.nearby-distance').textContent : '';
+    const area = item.dataset.area || '';
+    const group = item.dataset.group || 'nearby';
+    const imageUrl = item.dataset.imageUrl || '';
+    const isVerified = color.toUpperCase().includes('FFD700');
+    return { color, name, distance, area, group, imageUrl, isVerified };
+  });
+  window._pillIndex = 0;
+  renderPillSlide(pill, 0);
+}
 
-  const dotEl    = firstItem.querySelector('.nearby-dot');
-  const color    = dotEl ? dotEl.style.background : '#FF6B35';
-  const name     = firstItem.querySelector('.nearby-name')
-    ? firstItem.querySelector('.nearby-name').textContent     : '';
-  const distance = firstItem.querySelector('.nearby-distance')
-    ? firstItem.querySelector('.nearby-distance').textContent : '';
+function renderPillSlide(pill, index) {
+  const pins = window._pillPins || [];
+  if (!pins.length) return;
+  const pin = pins[index];
+  const badgeLabel = pin.isVerified ? 'Verified' : 'Friend';
+  const badgeClass = pin.isVerified ? 'verified' : 'friend';
+  const total = pins.length;
 
-  const isVerified = color.toUpperCase().includes('FFD700');
-  const badgeLabel = isVerified ? 'Verified' : 'Friend';
-  const badgeClass = isVerified ? 'verified' : 'friend';
+  const dots = Array.from({ length: total }, function(_, i) {
+    return '<span class="pill-nav-dot' + (i === index ? ' active' : '') + '"></span>';
+  }).join('');
+
+  const bgStyle = pin.imageUrl
+    ? 'background-image: url("' + pin.imageUrl + '"); background-size: cover; background-position: center;'
+    : '';
 
   pill.innerHTML =
-    '<span class="pill-dot" style="background:' + color + '"></span>' +
-    '<span class="pill-name">'                  + name     + '</span>' +
-    '<span class="pill-distance">'              + distance + '</span>' +
-    '<span class="pill-badge ' + badgeClass + '">' + badgeLabel + '</span>';
+    '<div class="pill-bg-overlay" style="' + bgStyle + '">' +
+      '<div class="pill-bg-dim"></div>' +
+    '</div>' +
+    '<span class="pill-dot" style="background:' + pin.color + '"></span>' +
+    '<div class="pill-info">' +
+      '<span class="pill-name">' + pin.name + '</span>' +
+      '<span class="pill-meta">' + (pin.area ? pin.area + ' · ' : '') + pin.group + '</span>' +
+    '</div>' +
+    '<div class="pill-right">' +
+      '<span class="pill-distance">' + pin.distance + '</span>' +
+      '<span class="pill-badge ' + badgeClass + '">' + badgeLabel + '</span>' +
+    '</div>' +
+    '<div class="pill-nav">' + dots + '</div>';
 }
 
 // Collapses the full nearby panel and shows the floating pill.
