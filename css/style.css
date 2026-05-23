@@ -274,21 +274,9 @@ body.panel-collapsed #layer-pills-wrapper { flex: none; }
   -webkit-overflow-scrolling: touch;
   touch-action: pan-x;
   min-width: 0;
-  -webkit-mask-image: linear-gradient(to right, black 70%, transparent 100%);
-  mask-image: linear-gradient(to right, black 70%, transparent 100%);
 }
 
 #layer-pills::-webkit-scrollbar { display: none; }
-
-#control-bar:has(#locate-btn.btn-expanded) #layer-pills {
-  -webkit-mask-image: none !important;
-  mask-image: none !important;
-}
-
-#control-bar:has(#toggle-3d.btn-expanded) #layer-pills {
-  -webkit-mask-image: none !important;
-  mask-image: none !important;
-}
 
 .layer-pill {
   display: inline-flex;
