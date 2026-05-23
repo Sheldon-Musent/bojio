@@ -408,6 +408,7 @@ body.panel-collapsed .layer-pill.active .pill-text {
   -webkit-tap-highlight-color: transparent;
   white-space: nowrap;
   overflow: hidden;
+  padding-bottom: 20px;
 }
 
 .pill-bg-overlay {
