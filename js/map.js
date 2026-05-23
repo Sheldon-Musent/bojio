@@ -100,7 +100,7 @@ function locateUser(map, getPitch) {
       }
 
       userMarker.setLngLat([longitude, latitude]).addTo(map);
-      userMarker.getElement().classList.add('located');
+      userMarker.getElement().style.display = 'block';
 
       map.easeTo({
         center:   [longitude, latitude],
