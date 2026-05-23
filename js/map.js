@@ -112,7 +112,7 @@ function locateUser(map, getPitch) {
       });
       window.updateNearbyList(latitude, longitude);
     },
-    function onError() {}
+    function onError(err) { console.log('[locate] GPS error:', err.code, err.message); }
   );
 }
 
