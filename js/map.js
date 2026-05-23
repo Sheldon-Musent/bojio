@@ -219,7 +219,7 @@ function expandFromPill() {
   // Insert GPS, direction, then 3D so the row reads: [layer pills] [GPS] [DIR] [3D]
   const dirBtn = document.createElement('button');
   dirBtn.id = 'direction-btn';
-  dirBtn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>';
+  dirBtn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/><circle cx="12" cy="12" r="3"/></svg>';
   const bar = document.getElementById('control-bar');
   bar.appendChild(locateBtn);
   bar.appendChild(dirBtn);
