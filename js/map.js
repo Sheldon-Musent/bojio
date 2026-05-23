@@ -108,7 +108,7 @@ function locateUser(map, getPitch) {
       });
       window.updateNearbyList(latitude, longitude);
     },
-    function onError(err) { console.log('[locate] GPS error:', err.code, err.message); },
+    function onError() {},
     { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
   );
 }
