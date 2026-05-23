@@ -9,7 +9,7 @@ mapboxgl.accessToken = CONFIG.mapboxToken;
 // resolves (or as fallback). Mapbox GL JS uses [lng, lat] order.
 const DEFAULT_LNG  = 101.7924;
 const DEFAULT_LAT  = 3.0415;
-const DEFAULT_ZOOM = 17;
+const DEFAULT_ZOOM = 20;
 
 // ─── Map initialisation ───────────────────────────────────────────────────────
 
