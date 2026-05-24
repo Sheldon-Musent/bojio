@@ -519,20 +519,25 @@ body.panel-collapsed #nearby-pill { opacity: 1; pointer-events: auto; }
   border-radius: 2px;
 }
 
-.pill-swipe-hint {
+.swipe-left {
   position: absolute;
-  bottom: 6px;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: space-between;
-  padding: 0 20px;
-  pointer-events: none;
-  z-index: 2;
-}
-.swipe-arrow {
-  font-size: 16px;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
   color: #333;
+  pointer-events: none;
+  line-height: 1;
+}
+
+.swipe-right {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 20px;
+  color: #333;
+  pointer-events: none;
   line-height: 1;
 }
 

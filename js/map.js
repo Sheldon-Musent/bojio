@@ -227,10 +227,8 @@ function renderPillSlide(pill, index) {
       '<span class="pill-dist-num">' + distNum + '</span>' +
       '<span class="pill-dist-unit">' + distUnit + '</span>' +
     '</div>' +
-    '<div class="pill-swipe-hint">' +
-      '<span class="swipe-arrow left">‹</span>' +
-      '<span class="swipe-arrow right">›</span>' +
-    '</div>' +
+    '<span class="swipe-left">‹</span>' +
+    '<span class="swipe-right">›</span>' +
     '<div class="pill-nav">' + dots + '</div>';
 }
 
