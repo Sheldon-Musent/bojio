@@ -88,7 +88,7 @@ function renderPins(map, pins) {
       ],
       'circle-stroke-width': 2,
       'circle-stroke-color': '#ffffff',
-      'circle-opacity':      0.9,
+      'circle-opacity':      1,
     },
   });
 
