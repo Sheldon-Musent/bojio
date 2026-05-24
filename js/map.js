@@ -206,7 +206,9 @@ function renderPillSlide(pill, index) {
     return '<span class="pill-nav-dot' + (i === index ? ' active' : '') + '"></span>';
   }).join('');
 
-  const distNum = pin.distance.replace(' km', '').replace('km', '').trim();
+  const distParts = pin.distance.replace('km', '').replace('m', '').trim().split(' ');
+  const distNum = distParts[0];
+  const distUnit = pin.distance.includes('km') ? 'km' : 'm';
 
   const bgStyle = pin.imageUrl
     ? 'background-image: url("' + pin.imageUrl + '"); background-size: cover; background-position: center;'
@@ -223,7 +225,7 @@ function renderPillSlide(pill, index) {
     '</div>' +
     '<div class="pill-dist-card">' +
       '<span class="pill-dist-num">' + distNum + '</span>' +
-      '<span class="pill-dist-unit">km</span>' +
+      '<span class="pill-dist-unit">' + distUnit + '</span>' +
     '</div>' +
     '<div class="pill-nav">' + dots + '</div>';
 }
