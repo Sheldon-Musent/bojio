@@ -209,6 +209,7 @@ function renderPillSlide(pill, index) {
   const distParts = pin.distance.replace('km', '').replace('m', '').trim().split(' ');
   const distNum = distParts[0];
   const distUnit = pin.distance.includes('km') ? 'km' : 'm';
+  console.log('[pill] distance raw:', pin.distance, '| distNum:', distNum, '| distUnit:', distUnit);
 
   const bgStyle = pin.imageUrl
     ? 'background-image: url("' + pin.imageUrl + '"); background-size: cover; background-position: center;'
