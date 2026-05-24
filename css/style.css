@@ -483,6 +483,7 @@ body.panel-collapsed #nearby-pill { opacity: 1; pointer-events: auto; }
   line-height: 1;
   letter-spacing: -1px;
   font-family: 'DM Sans', system-ui, sans-serif;
+  display: block;
 }
 
 .pill-dist-unit {
@@ -490,6 +491,7 @@ body.panel-collapsed #nearby-pill { opacity: 1; pointer-events: auto; }
   color: #666;
   font-family: 'IBM Plex Mono', monospace;
   letter-spacing: 1px;
+  display: block;
 }
 
 .pill-nav {
