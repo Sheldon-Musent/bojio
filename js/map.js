@@ -16,7 +16,7 @@ const DEFAULT_ZOOM = 18;
 function initMap() {
   return new mapboxgl.Map({
     container: 'map',
-    style:     'mapbox://styles/mapbox/standard',
+    style:     'mapbox://styles/musent/cmpj5ad6a001p01sf3g672g4j',
     center:    [DEFAULT_LNG, DEFAULT_LAT],
     zoom:      DEFAULT_ZOOM,
     pitch:     45,
