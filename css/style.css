@@ -727,3 +727,8 @@ body.panel-collapsed #nearby-pill { opacity: 1; pointer-events: auto; }
    Leaflet sets this on its internal container but declaring it on #map too
    ensures no gap between the Leaflet root and the CSS stacking context. */
 #map { touch-action: none; }
+
+.mapboxgl-ctrl-bottom-left,
+.mapboxgl-ctrl-bottom-right {
+  display: none !important;
+}
