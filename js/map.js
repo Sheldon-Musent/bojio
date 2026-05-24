@@ -199,13 +199,14 @@ function renderPillSlide(pill, index) {
   const pins = window._pillPins || [];
   if (!pins.length) return;
   const pin = pins[index];
-  const badgeLabel = pin.isVerified ? 'Verified' : 'Friend';
-  const badgeClass = pin.isVerified ? 'verified' : 'friend';
   const total = pins.length;
+  const socialLine = pin.isVerified ? 'Community verified' : 'A friend recommends this';
 
   const dots = Array.from({ length: total }, function(_, i) {
     return '<span class="pill-nav-dot' + (i === index ? ' active' : '') + '"></span>';
   }).join('');
+
+  const distNum = pin.distance.replace(' km', '').replace('km', '').trim();
 
   const bgStyle = pin.imageUrl
     ? 'background-image: url("' + pin.imageUrl + '"); background-size: cover; background-position: center;'
@@ -215,14 +216,14 @@ function renderPillSlide(pill, index) {
     '<div class="pill-bg-overlay" style="' + bgStyle + '">' +
       '<div class="pill-bg-dim"></div>' +
     '</div>' +
-    '<span class="pill-dot" style="background:' + pin.color + '"></span>' +
-    '<div class="pill-info">' +
+    '<div class="pill-left">' +
+      '<span class="pill-social">' + socialLine + '</span>' +
       '<span class="pill-name">' + pin.name + '</span>' +
-      '<span class="pill-meta">' + (pin.area ? pin.area + ' · ' : '') + pin.group + '</span>' +
+      '<span class="pill-action">Res details →</span>' +
     '</div>' +
-    '<div class="pill-right">' +
-      '<span class="pill-distance">' + pin.distance + '</span>' +
-      '<span class="pill-badge ' + badgeClass + '">' + badgeLabel + '</span>' +
+    '<div class="pill-dist-card">' +
+      '<span class="pill-dist-num">' + distNum + '</span>' +
+      '<span class="pill-dist-unit">km</span>' +
     '</div>' +
     '<div class="pill-nav">' + dots + '</div>';
 }
