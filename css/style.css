@@ -519,30 +519,6 @@ body.panel-collapsed #nearby-pill { opacity: 1; pointer-events: auto; }
   border-radius: 2px;
 }
 
-.swipe-left {
-  position: absolute;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 20px;
-  color: #333;
-  pointer-events: none;
-  line-height: 1;
-  display: none;
-}
-
-.swipe-right {
-  position: absolute;
-  right: 10px;
-  top: 50%;
-  transform: translateY(-50%);
-  font-size: 20px;
-  color: #333;
-  pointer-events: none;
-  line-height: 1;
-  display: none;
-}
-
 /* Drag handle — visual affordance, no drag behaviour needed in v1 */
 #nearby-handle {
   width: 36px;
