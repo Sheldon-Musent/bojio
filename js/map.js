@@ -230,6 +230,13 @@ function renderPillSlide(pill, index) {
     '<span class="swipe-left">‹</span>' +
     '<span class="swipe-right">›</span>' +
     '<div class="pill-nav">' + dots + '</div>';
+
+  if (pins.length > 1) {
+    var l = pill.querySelector('.swipe-left');
+    var r = pill.querySelector('.swipe-right');
+    if (l) l.style.display = 'block';
+    if (r) r.style.display = 'block';
+  }
 }
 
 // Collapses the full nearby panel and shows the floating pill.
