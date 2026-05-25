@@ -406,8 +406,8 @@ body.panel-collapsed .layer-pill.active .pill-text {
   pointer-events: none;
   transition: opacity 0.25s ease;
   -webkit-tap-highlight-color: transparent;
-  white-space: nowrap;
   overflow: hidden;
+  justify-content: space-between;
 }
 
 .pill-bg-overlay {
